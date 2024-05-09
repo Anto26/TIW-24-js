@@ -25,8 +25,8 @@ import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.servlets.DataServlet;
 
 @WebServlet("/checkAvailability")
-public class CheckAvailabilityServlet extends DataServlet {
-    private static final long serialVersionUID = -7297515526961117146L;
+public class CheckAvailabilityServlet extends ApiServlet {
+    private static final long serialVersionUID = -7297515526960117146L;
     private Gson gson = new Gson();
     
 	public CheckAvailabilityServlet() {
@@ -75,17 +75,7 @@ public class CheckAvailabilityServlet extends DataServlet {
 		this.doGet(request, response);
 	}
 	
-	private JsonObject badRequestResponse(HttpServletResponse response, String message) throws IOException {
-		JsonObject result = new JsonObject();
-		result.addProperty("ok", false);
-		result.addProperty("result", message);
-		PrintWriter out = response.getWriter();
-		response.setStatus(400);
-		out.write(gson.toJson(result));
-		return result;
-	}
-	
-	private JsonObject answerRequest(HttpServletResponse response, boolean taken) throws IOException {
+	private void answerRequest(HttpServletResponse response, boolean taken) throws IOException {
 		JsonObject result = new JsonObject();
 		JsonObject content = new JsonObject();
 		result.addProperty("ok", true);
@@ -94,6 +84,6 @@ public class CheckAvailabilityServlet extends DataServlet {
 		PrintWriter out = response.getWriter();
 		response.setStatus(200);
 		out.write(gson.toJson(result));
-		return result;
 	}
+
 }
