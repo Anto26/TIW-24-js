@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.thymeleaf.context.WebContext;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import it.polimi.tiw.beans.Album;
@@ -27,7 +28,7 @@ import it.polimi.tiw.servlets.DataServlet;
 @WebServlet("/checkAvailability")
 public class ApiServlet extends DataServlet {
     private static final long serialVersionUID = -7297515526911117146L;
-    Gson gson = new Gson();
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();;
 
 	void badRequestResponse(HttpServletResponse response, String message) throws IOException {
 		JsonObject result = new JsonObject();
