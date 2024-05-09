@@ -1,0 +1,17 @@
+:root { -
+	-bg-color: #eff1f5; -
+	-fg-color: #4c4f69; -
+	-accent-bg-color: #4C4F69; -
+	-accent-fg-color: #D3E0E8; -
+	-primary-container: #DBE0E8; -
+	-secondary-container: #CCD0DA; -
+	-border-color: #9ca0b0; -
+	-navbar-color: #dce0e8; -
+	-button-color: #CED0D5; -
+	-button-overlay: #8c8fa1; -
+	-link-color: #A092F3; -
+	-error-outline: #d20f39; -
+	-error-background: #fff6f5; -
+	-error-fg-color: #000000; -
+	-transparent: rgba(0, 0, 0, 0);
+}

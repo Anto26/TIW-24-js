@@ -1,0 +1,43 @@
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+	version="4.0">
+	<context-param>
+		<param-name>uploadDir</param-name>
+		<param-value>TIW-Images/</param-value>
+	</context-param>
+	<context-param>
+		<param-name>dbUrl</param-name>
+		<param-value>jdbc:mysql://localhost:3306/tiw_db?serverTimezone=UTC</param-value>
+	</context-param>
+	<context-param>
+		<param-name>dbUser</param-name>
+		<param-value>root</param-value>
+	</context-param>
+	<context-param>
+		<param-name>dbPassword</param-name>
+		<param-value>tiw</param-value>
+	</context-param>
+	<context-param>
+		<param-name>dbDriver</param-name>
+		<param-value>com.mysql.cj.jdbc.Driver</param-value>
+	</context-param>
+
+	<welcome-file-list>
+		<welcome-file>signin</welcome-file>
+	</welcome-file-list>
+
+	<filter>
+		<filter-name>AuthenticationCheck</filter-name>
+		<filter-class>it.polimi.tiw.filters.AuthenticationCheck</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AuthenticationCheck</filter-name>
+		<url-pattern>/home</url-pattern>
+		<url-pattern>/image</url-pattern>
+		<url-pattern>/images/</url-pattern>
+		<url-pattern>/album</url-pattern>
+		<url-pattern>/createAlbum</url-pattern>
+		<url-pattern>/addComment</url-pattern>
+	</filter-mapping>
+</web-app>
