@@ -25,18 +25,24 @@ import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.dao.AlbumDAO;
 import it.polimi.tiw.servlets.DataServlet;
 
-@WebServlet("/checkAvailability")
 public class ApiServlet extends DataServlet {
     private static final long serialVersionUID = -7297515526911117146L;
     Gson gson = new GsonBuilder().setPrettyPrinting().create();;
 
 	void badRequestResponse(HttpServletResponse response, String message) throws IOException {
+		this.badRequestResponse(response, message, 400);
+	}
+	void badRequestResponse(HttpServletResponse response, String message, int code) throws IOException {
 		JsonObject result = new JsonObject();
 		result.addProperty("ok", false);
 		result.addProperty("result", message);
 		PrintWriter out = response.getWriter();
-		response.setStatus(400);
+		response.setStatus(code);
 		out.write(gson.toJson(result));
+	}
+	
+	void setJsonContent(HttpServletResponse response) {
+		response.setHeader("content-type", "application/json");
 	}
 	
 }

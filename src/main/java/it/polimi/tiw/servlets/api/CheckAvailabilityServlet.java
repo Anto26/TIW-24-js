@@ -38,10 +38,10 @@ public class CheckAvailabilityServlet extends ApiServlet {
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		setJsonContent(response);
 		String username = request.getParameter("username");
 		String email = request.getParameter("email");
-		response.setHeader("content-type", "application/json");
-		JsonObject result = new JsonObject();
+		
 		if (username != null) {
 			if (username.isEmpty() || username.length() > 30) {
 				badRequestResponse(response, "No valid username given");
