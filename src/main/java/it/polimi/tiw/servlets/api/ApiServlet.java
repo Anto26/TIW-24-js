@@ -27,6 +27,15 @@ public class ApiServlet extends DataServlet {
 		out.write(gson.toJson(result));
 	}
 	
+	void goodRequestResponse(HttpServletResponse response, JsonObject obj) throws IOException {
+		JsonObject result = new JsonObject();
+		result.addProperty("ok", true);
+		result.add("result", obj);
+		PrintWriter out = response.getWriter();
+		response.setStatus(200);
+		out.write(gson.toJson(result));
+	}
+	
 	void setJsonContent(HttpServletResponse response) {
 		response.setHeader("content-type", "application/json");
 	}

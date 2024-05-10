@@ -76,14 +76,9 @@ public class CheckAvailabilityServlet extends ApiServlet {
 	}
 	
 	private void answerRequest(HttpServletResponse response, boolean taken) throws IOException {
-		JsonObject result = new JsonObject();
 		JsonObject content = new JsonObject();
-		result.addProperty("ok", true);
 		content.addProperty("taken", taken);
-		result.add("result", content);
-		PrintWriter out = response.getWriter();
-		response.setStatus(200);
-		out.write(gson.toJson(result));
+		this.goodRequestResponse(response, content);
 	}
 
 }

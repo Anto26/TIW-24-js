@@ -63,9 +63,7 @@ public class GetImagesServlet extends ApiServlet {
 			// The album is available
 			LinkedHashMap<Image, Pair<Person, List<Pair<Person, Comment>>>> res = imageDAO.getAlbumImagesWithComments(album.get());
 			JsonObject result = JsonUtility.mapToAlbumPage(album.get(), creator.get(), res);
-			response.setStatus(200);
-			PrintWriter out = response.getWriter();
-			out.write(gson.toJson(result));
+			this.goodRequestResponse(response, result);
 		} catch (SQLException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			e.printStackTrace();
