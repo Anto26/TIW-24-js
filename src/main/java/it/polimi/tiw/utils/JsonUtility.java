@@ -77,4 +77,13 @@ public class JsonUtility {
 		result.addProperty("content", c.getContent());
 		return result;
 	}
+	
+	public static JsonArray mapToJson(List<Image> images) {
+		JsonArray result = new JsonArray();
+		for (Image i : images) {
+			result.add(mapToJson(i));
+		}
+		return result;
+	}
+	
 }

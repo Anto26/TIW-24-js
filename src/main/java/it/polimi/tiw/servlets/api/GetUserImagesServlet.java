@@ -20,19 +20,22 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import it.polimi.tiw.beans.Album;
+import it.polimi.tiw.beans.Comment;
 import it.polimi.tiw.beans.Image;
 import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.dao.AlbumDAO;
+import it.polimi.tiw.dao.ImageDAO;
 import it.polimi.tiw.servlets.DataServlet;
+import it.polimi.tiw.utils.GeneralUtility;
 import it.polimi.tiw.utils.JsonUtility;
 import it.polimi.tiw.utils.Pair;
 
-@WebServlet("/getAlbums")
-public class GetAlbumsServlet extends ApiServlet {
-    private static final long serialVersionUID = -7297515526960117146L;
+@WebServlet("/getUserImages")
+public class GetUserImagesServlet extends ApiServlet {
+    private static final long serialVersionUID = -7291515526960117146L;
     private Gson gson = new Gson();
     
-	public GetAlbumsServlet() {
+	public GetUserImagesServlet() {
         super();
     }
 	
@@ -42,13 +45,15 @@ public class GetAlbumsServlet extends ApiServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		setJsonContent(response);
+		Person user = (Person) request.getSession().getAttribute("user");
 		try {
-			AlbumDAO albumDao = new AlbumDAO(this.dbConnection);
-			LinkedHashMap<Album, Pair<Person, Image>> albums = albumDao.getAlbumThumbnailAndPersonMap();
-			JsonArray result = JsonUtility.getAlbumsJsonObject(albums);
-			this.goodRequestResponse(response, result);
+			ImageDAO imageDAO = new ImageDAO(this.dbConnection);
+			
+			List<Image> imgs = imageDAO.getPersonImages(user);
+			this.goodRequestResponse(response, JsonUtility.mapToJson(imgs));
 		} catch (SQLException e) {
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			e.printStackTrace();
 		}
 	}
 
