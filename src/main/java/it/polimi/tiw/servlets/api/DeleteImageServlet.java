@@ -2,6 +2,7 @@ package it.polimi.tiw.servlets.api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -21,20 +22,23 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import it.polimi.tiw.beans.Album;
+import it.polimi.tiw.beans.Comment;
 import it.polimi.tiw.beans.Image;
 import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.dao.AlbumDAO;
+import it.polimi.tiw.dao.CommentDAO;
 import it.polimi.tiw.dao.ImageDAO;
 import it.polimi.tiw.servlets.DataServlet;
 import it.polimi.tiw.utils.CreateAlbumUtility;
+import it.polimi.tiw.utils.GeneralUtility;
 import it.polimi.tiw.utils.JsonUtility;
 
-@WebServlet("/createAlbum")
-public class CreateAlbumServlet extends ApiServlet {
-    private static final long serialVersionUID = -7297515526960117146L;
+@WebServlet("/deleteImage")
+public class DeleteImageServlet extends ApiServlet {
+    private static final long serialVersionUID = -7397515526960117146L;
     private Gson gson = new Gson();
     
-	public CreateAlbumServlet() {
+	public DeleteImageServlet() {
         super();
     }
 	
@@ -44,46 +48,35 @@ public class CreateAlbumServlet extends ApiServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		setJsonContent(response);
-		Person user = (Person) request.getSession().getAttribute("user");
+		Person user = (Person) request.getSession().getAttribute("user");		
 
-		// Check title param
-		String title = request.getParameter("title");
-		if (title == null || title == "" || title.length() > 30) {
-			badRequestResponse(response, "Wrong title given, the title must be at least one character and maximum 30 characters");
+		String imgParameter = request.getParameter("imgId");
+		
+		if (!GeneralUtility.isValidNumericParameter(imgParameter)) {
+			System.out.println(imgParameter);
+			badRequestResponse(response, "The image ID is wrong");
 			return;
 		}
-
+		Integer imgId = Integer.parseInt(imgParameter);
+		Optional<Comment> c;
+		Optional<Image> img;
 		try {
 			ImageDAO imageDAO = new ImageDAO(this.dbConnection);
 			AlbumDAO albumDAO = new AlbumDAO(this.dbConnection);
-			// Get the list of the given parameters
-			Set<String> parameters = request.getParameterMap().keySet();
-			int[] ids = parameters.stream().filter(CreateAlbumUtility::isNumeric).mapToInt(Integer::parseInt).toArray();
-			// Check that every id is an image from this user
-			for (int id : ids) {
-				Optional<Image> img = imageDAO.get(id);
-				if (img.isEmpty() || img.get().getUploaderId() != user.getId()) {
-					badRequestResponse(response, "Wrong image selected");
+			img = imageDAO.get(imgId);
+			if (img.isPresent()) {
+				if (img.get().getUploaderId() == user.getId()) {
+					imageDAO.delete(img.get());
+					albumDAO.deleteEmptyAlbums();
+					goodRequestResponse(response, JsonUtility.mapToJson(img.get()));
 					return;
+				} else {
+					badRequestResponse(response, "The user is not the uploader of the image", 403);
 				}
+			} else {
+				badRequestResponse(response, "The given image does not exist", 404);
+				return;			
 			}
-			if (ids.length < 1) {
-				badRequestResponse(response, "You have to choose at least one image to create an album");
-				return;
-			}
-
-			// Save the album
-			Optional<Album> album = albumDAO.save(title, String.valueOf(user.getId()));
-			// Save the images
-			for (int id : ids) {
-				if (request.getParameter(String.valueOf(id)).equals("on"))
-					albumDAO.addImage(album.get().getId(), id);
-			}
-			// Give the result
-			JsonObject result = new JsonObject();
-			result.addProperty("id", album.get().getId());
-			this.goodRequestResponse(response, result);
-			
 		} catch (SQLException e) {
 			badRequestResponse(response, "Could not connect to the database", 500);
 			return;
