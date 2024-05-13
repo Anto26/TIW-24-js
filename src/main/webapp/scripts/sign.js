@@ -4,9 +4,6 @@ const password = document.querySelector('#password');
 const repeatPassword = document.querySelector('#repeat-password');
 const form = document.querySelector('.inner-form');
 
-const checkAvailabilityUrl = window.location.origin + '/TIW-24-js/checkAvailability';
-const xmlHttpRequest = new XMLHttpRequest();
-
 const errorDiv = document.createElement('div');
 errorDiv.className = 'error-container';
 errorDiv.style = 'visibility: hidden';
@@ -20,23 +17,6 @@ function showError(error, text) {
 	} else {
 		errorDiv.style='visibility: hidden';
 	}	
-}
-
-function asyncXHR(urlString, paramsInitCallback, onResponseCallback) {
-	const url = new URL(urlString);
-	const xmlHttpRequest = new XMLHttpRequest();
-	
-	paramsInitCallback(url);
-	
-	xmlHttpRequest.onreadystatechange = () => {
-		if (xmlHttpRequest.readyState === 4) {
-			const response = JSON.parse(xmlHttpRequest.response);
-			onResponseCallback(response);
-		}
-	};
-	
-	xmlHttpRequest.open("get", url);
-	xmlHttpRequest.send();
 }
 
 username.addEventListener("input", () => {

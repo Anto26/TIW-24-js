@@ -1,82 +1,53 @@
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-<title>Home</title>
-<link rel="stylesheet" href="css/home.css" />
-<!-- Set a viewport to make the design responsive -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
-<body>
-	<!-- Navbar -->
-	<div class="navbar">
-		<!-- Section on left - create album button-->
-		<a href="create_album.html" th:href="createAlbum">
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>Home</title>
+		<link rel="stylesheet" href="css/home.css" />
+		<script src="scripts/utility.js" type="text/javascript" defer></script>
+		<script src="scripts/home.js" type="text/javascript" defer></script>
+		<!-- Set a viewport to make the design responsive -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	</head>
+	<body>
+		<!-- Navbar -->
+		<div class="navbar">
+			<!-- Section on left - create album button-->
 			<button class="icon-button button">
 				<img src="icons/add.svg" title="Create album" alt="Create" />
 			</button>
-		</a>
-		<!-- Section on right, username and logout button-->
-		<div style="display: flex;">
-			<h1 th:text="${user.username}">Oingo</h1>
-			<a href="logout" style="margin-right: 3px; margin-left: 10px;">
-				<button class="button destructive-button">Log out</button>
-			</a>
-		</div>
-	</div>
-	<!-- Home page -->
-	<div class="feed">
-		<!-- User albums -->
-		<div class="album-container">
-			<div class="centerdiv">
-				<h2>Your albums</h2>
+			<!-- Section on right, username and logout button-->
+			<div style="display: flex;">
+				<h1 id="username"></h1>
+				<a href="logout" style="margin-right: 3px; margin-left: 10px;">
+					<button class="button destructive-button">Log out</button>
+				</a>
 			</div>
-			<!-- Album "grid" achieved with a flexbox-->
-			<div class="album-grid" th:remove="all-but-first">
-				<!-- Single album card-->
-				<div class="album-card" th:object="${album}"
-					th:each="album : ${userAlbums}">
-					<div class="thumbnail-container">
-						<img class="album-thumbnail"
-							th:src="'images/' + ${albumThumbnail[__album__].filePath}"
-							src="img/test.jpg" />
-					</div>
-					<div class="card-information">
-						<p class="card-title" th:text="*{title}">Album Name</p>
-						<p class="card-author"
-							th:text="${albumAuthor[__album__].username}">by: Dio</p>
-						<p class="card-date" th:text="*{creationDate}">22/04/1992</p>
-						<a href="/album.html" th:href="@{/album(albumId=*{id})}"><button
-								class="button accent-button">Go to album</button></a>
-					</div>
+		</div>
+		<!-- Home page -->
+		<div class="feed">
+			<!-- User albums -->
+			<div class="album-container">
+				<div class="centerdiv">
+					<h2>Your albums</h2>
+				</div>
+				<!-- Album "grid" achieved with a flexbox-->
+				<div class="album-grid" id="user-albums">
+					<!-- Single album card-->
+
+				</div>
+			</div>
+			<!-- Other users albums -->
+			<div class="album-container">
+				<div class="centerdiv">
+					<h2>Other users' albums</h2>
+				</div>
+				<!-- Grid of albums-->
+				<div class="album-grid" id="others-albums">
+					<!-- Single album card-->
+
 				</div>
 			</div>
 		</div>
-		<!-- Other users albums -->
-		<div class="album-container">
-			<div class="centerdiv">
-				<h2>Other users' albums</h2>
-			</div>
-			<!-- Grid of albums-->
-			<div class="album-grid" th:remove="all-but-first">
-				<!-- Single album card-->
-				<div class="album-card" th:object="${album}"
-					th:each="album : ${allAlbums}"
-					th:if="${album.creatorId} != ${user.id}">
-					<div class="thumbnail-container">
-						<img class="album-thumbnail"
-							th:src="'images/' + ${albumThumbnail[__album__].filePath}"
-							src="img/test.jpg" />
-					</div>
-					<div class="card-information">
-						<p class="card-title" th:text="*{title}">Album Name</p>
-						<p class="card-author"
-							th:text="${albumAuthor[__album__].username}">by: Dio</p>
-						<p class="card-date" th:text="*{creationDate}">22/04/1992</p>
-						<a href="/album.html" th:href="@{/album(albumId=*{id})}"><button
-								class="button accent-button">Go to album</button></a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</body>
+
+	</body>
 </html>
