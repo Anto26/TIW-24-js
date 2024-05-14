@@ -149,3 +149,20 @@ p {
     border-radius: 10px;
     margin-bottom: 10px;
 }
+
+.error-popup {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    margin-top: -100px;
+    width: 80%;
+    max-width: 500px;
+    transition: margin-top cubic-bezier(0.075, 0.82, 0.165, 1) 1s;
+}
+
+.error-popup-show {
+    margin-top: 100px !important;
+}
