@@ -4,29 +4,26 @@ const usernameHeader = document.querySelector('#username');
 var username = "";
 var albums;
 const errorPopup = document.querySelector('#error-popup');
-const errorMessage = document.querySelector('#error-message')
+const errorMessage = document.querySelector('#error-message');
 
-asyncXHR(getMeUrl, (url) => {return url;}, (response) => {
-    if (response.ok) {
-        username = response.result.username;
-        usernameHeader.textContent = username;
-        // Populate albums
-        asyncXHR(getAlbumsUrl, (url) => {return url;}, (response) => {
-            if (response.ok) {
-                albums = response.result;
-                populateAlbums(albums);
-            } else {
-                displayError(response.result);
-            }
-        })
+asyncXHR(getMeUrl, 
+    (url) => {}, 
+    (response) => {
+        if (response.ok) {
+            username = response.result.username;
+            usernameHeader.textContent = username;
+            // Populate albums
+            asyncXHR(getAlbumsUrl, (url) => {return url;}, (response) => {
+                if (response.ok) {
+                    albums = response.result;
+                    populateAlbums(albums);
+                } else {
+                    displayError(response.result);
+                }
+            })
+        }
     }
-});
-
-function displayError(error) {
-    errorMessage.innerHTML = error;
-    errorPopup.classList.add("error-popup-show")
-    setTimeout(() => {errorPopup.classList.remove("error-popup-show")}, 4000);
-}
+);
 
 function populateAlbums(albums) {
     albums.forEach(album => {

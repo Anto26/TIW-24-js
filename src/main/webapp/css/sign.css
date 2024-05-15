@@ -50,3 +50,11 @@
 .extra-text {
     text-align: center;
 }
+
+.error-popup-show-sign {
+    margin-top: 20px !important;
+}
+
+.fine-popup-show-sign {
+    margin-top: 20px !important;
+}

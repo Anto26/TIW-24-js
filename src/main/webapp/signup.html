@@ -2,13 +2,20 @@
     <head>
         <title>TIW - Sign up</title>
         
-        <link rel="stylesheet" href="css/sign.css" />
         <!-- Set a viewport to make the design responsive -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script type="text/javascript" src="scripts/utility.js" defer></script>
-        <script type="text/javascript" src="scripts/sign.js" defer></script>
+
+        <script src="scripts/utility.js" type="text/javascript" defer></script>
+        <script src="scripts/sign.js" type="text/javascript" defer></script>
+        <link rel="stylesheet" href="css/sign.css" />
     </head>
     <body>
+        <div class="error-popup error-container" id="error-popup">
+            <p id="error-message"></p>
+        </div>
+        <div class="fine-popup fine-container" id="fine-popup">
+            <p id="fine-message"></p>
+        </div>
         <div class="outer-form">
             <div style="padding: 3px;" class="inner-form">
                 <div class="error-container" th:if="${error}">

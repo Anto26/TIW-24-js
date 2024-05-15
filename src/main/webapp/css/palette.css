@@ -12,8 +12,10 @@
     --link-color: #A092F3;
     --error-outline: #d20f39;
     --error-backgorund: rgba(220, 138, 120, 0.9);
-    --error-background: #fff6f5;
     --error-fg-color: #000000;
+    --fine-outline: #46f53d;
+    --fine-backgorund: rgba(126, 245, 120, 0.9);
+    --fine-fg-color: #000000;
     --transparent: rgba(0, 0, 0, 0);
 
 }
