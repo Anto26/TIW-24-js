@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS text_comment;
 DROP TABLE IF EXISTS image;
 DROP TABLE IF EXISTS album;
 DROP TABLE IF EXISTS person;
+DROP TABLE IF EXISTS album_orders;
 
 -- CREATE all TABLEs
 CREATE TABLE person (
@@ -21,6 +22,7 @@ CREATE TABLE image (
     id INTEGER AUTO_INCREMENT NOT NULL,
     file_path VARCHAR(255) NOT NULL,
     title VARCHAR(30) NOT NULL,
+    description TEXT NOT NULL,
     description TEXT NOT NULL,
     upload_date DATE NOT NULL DEFAULT (CURRENT_DATE),
     uploader_id INTEGER NOT NULL,
@@ -71,4 +73,22 @@ CREATE TABLE text_comment (
         ON UPDATE CASCADE
         ON DELETE SET NULL,
     PRIMARY KEY (id)
+);
+
+CREATE TABLE album_orders (
+	person_id INTEGER NOT NULL,
+	album_id INTEGER NOT NULL,
+	image_id INTEGER NOT NULL,
+	priority INTEGER NOT NULL,
+	
+	FOREIGN KEY (person_id) REFERENCES person(id)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+	FOREIGN KEY (album_id) REFERENCES album(id)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+	FOREIGN KEY (image_id) REFERENCES image(id)
+		ON UPDATE CASCADE
+		ON DELETE CASCADE,
+	PRIMARY KEY (person_id, album_id, image_id)
 );
