@@ -1,11 +1,23 @@
+// General elements
+const errorPopup = document.querySelector('#error-popup');
+const errorMessage = document.querySelector('#error-message')
+// Navbar elements
+const homeButton = document.querySelector("#home-button");
+const createAlbumButton = document.querySelector("#create-album-button");
+// Album page elements
+const homePage = document.querySelector('#homepage')
 const userAlbumsDiv = document.querySelector('#user-albums');
 const othersAlbumsDiv = document.querySelector('#others-albums');
 const usernameHeader = document.querySelector('#username');
 var username = "";
 var albums;
-const errorPopup = document.querySelector('#error-popup');
-const errorMessage = document.querySelector('#error-message');
 
+// Create album page elements
+const createAlbumPage = document.querySelector('#create-album-page');
+const photoList = document.querySelector('#photos-list');
+var images = "";
+
+// Create album page elements
 asyncXHR(getMeUrl, 
     (url) => {}, 
     (response) => {
@@ -25,7 +37,43 @@ asyncXHR(getMeUrl,
     }
 );
 
+function showCreateAlbumPage() {
+    homePage.setAttribute("style", "display:none;");
+    createAlbumPage.setAttribute("style", "");
+    createAlbumButton.setAttribute("style", "display:none");
+    homeButton.setAttribute("style", "");
+    asyncXHR(getUserImagesUrl, (url) => {return url;}, (response) => {
+        if (response.ok) {
+            // Populate images
+            images = response.result;
+            refreshImages(images);
+        }
+    });
+}
+
+function showHomePage() {
+	homePage.setAttribute("style", "");
+    createAlbumPage.setAttribute("style", "display:none;");
+    createAlbumButton.setAttribute("style", "");
+    homeButton.setAttribute("style", "display:none;");
+	refreshAlbums();
+	
+}
+
+function refreshAlbums() {
+	userAlbumsDiv.innerHTML = "";
+	othersAlbumsDiv.innerHTML = "";
+	asyncXHR(getAlbumsUrl, (url) => {return url;}, (response) => {
+            if (response.ok) {
+                albums = response.result;
+                populateAlbums(albums);
+            } else {
+                displayError(response.result);
+            }
+        });
+}
 function populateAlbums(albums) {
+
     albums.forEach(album => {
         // Create the card container
         const card = document.createElement("div");
@@ -57,4 +105,53 @@ function populateAlbums(albums) {
         }
         container.appendChild(card);
       });
+}
+
+function refreshImages(images) {
+    photoList.innerHTML = '';
+    images.forEach(image => {
+        // Create the card container
+        const photo = document.createElement("div");
+        photo.classList.add("photo-check");
+        // Add inner HTML
+        // TODO add onclick to button
+        photo.innerHTML = `
+        <div class="photo-check">
+            <input id="${image.id}" name="${image.id}" type="checkbox" name="checkbox" class="checkbox">
+            <img src="images/${image.file_path}" class="checkbox-image" />
+        </div>
+        `;
+        photoList.appendChild(photo);
+      });
+}
+
+function submitImage() {
+	form = document.getElementById("image-form");
+	file = document.getElementById("image-upload");
+	var sendForm = new FormData();
+	sendForm.append("title", "Ciao");
+	sendForm.append("description", "adfadsf");
+	//sendForm.append("image", file.files[0]);
+	sendFormData(uploadImageUrl, sendForm, (response) => {
+		console.log(response);
+	});
+}
+
+function submitAlbum() {
+	asyncXHR(createAlbumUrl, 
+	(url) => {
+		var checkboxes = document.querySelectorAll('.checkbox:checked');
+		checkboxes.forEach((checkbox) => {
+			var id = checkbox.getAttribute("id");
+			url.searchParams.append(id, "on");
+		});
+		url.searchParams.append("title", document.querySelector("#album-title").value);
+	}, 
+	(response) => {
+            if (response.ok) {
+				showHomePage();
+            } else {
+                displayError(response.result);
+            }
+        });
 }

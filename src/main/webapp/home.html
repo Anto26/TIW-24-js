@@ -1,8 +1,8 @@
-<!DOCTYPE html>
 <html>
 	<head>
 		<title>Home</title>
 		<link rel="stylesheet" href="css/home.css" />
+		<link rel="stylesheet" href="css/createalbum.css" />
 		<script src="scripts/utility.js" type="text/javascript" defer></script>
 		<script src="scripts/home.js" type="text/javascript" defer></script>
 		<!-- Set a viewport to make the design responsive -->
@@ -15,9 +15,17 @@
 		<!-- Navbar -->
 		<div class="navbar">
 			<!-- Section on left - create album button-->
-			<button class="icon-button button">
-				<img src="icons/add.svg" title="Create album" alt="Create" />
-			</button>
+			<div id="create-album-button">
+				<button  class="icon-button button" onclick="showCreateAlbumPage();">
+					<img src="icons/add.svg" title="Create album" alt="Create"/>
+				</button>
+			</div>
+			<!-- Home button-->
+			<div id="home-button" style="display:none;">
+				<button class="icon-button button" onclick="showHomePage();">
+					<img src="icons/home.svg" title="Create album" alt="Create"/>
+				</button>
+			</div>
 			<!-- Section on right, username and logout button-->
 			<div style="display: flex;">
 				<h1 id="username"></h1>
@@ -26,8 +34,9 @@
 				</a>
 			</div>
 		</div>
+
 		<!-- Home page -->
-		<div class="feed">
+		<div class="feed" id="homepage">
 			<!-- User albums -->
 			<div class="album-container">
 				<div class="centerdiv">
@@ -51,5 +60,52 @@
 				</div>
 			</div>
 		</div>
+		
+		<!-- Create album page, hidden by default-->
+		<div id="create-album-page" class="create-album-form" style="display:none;">
+            <h1>Upload a new photo</h1>
+            <!-- Upload form-->
+            <p>Choose the photo, the title and the description and then click upload</p>
+            <form id="image-form" enctype="multipart/form-data">
+                <!-- Image title-->
+                <label class="input-label">Image title</label>
+                <br />
+                <input type="text" class="input" name="title"/>
+                <br />
+                <!-- Image description -->
+                <label class="input-label">Image description</label>
+                <br />
+                <textarea class="input" name="description" >  </textarea>             
+                <!-- Image upload -->
+                <div style="display: flex; justify-content: center;">
+                    <input type="file" id="image-upload" name="image" accept="image/*" hidden required/>
+                    <label for="image-upload" class="icon-button button">
+                            <img src="icons/upload.svg" title="Upload image" alt="Upload"/>
+                    </label>
+                    <button type="button" style="margin-left: 5px" class="button accent-button" onclick="submitImage();">
+                    	Upload
+                    </button>
+                </div>
+            </form>
+            <!-- Create album form -->
+            <h1>Create a new album</h1>
+            <div>
+                <!-- Album title input -->
+                <label class="input-label">Album title</label>
+                <br />
+                <input class="input" id="album-title" type="text" name="album-title" required/>
+                <br />
+                
+                <h2>Album photos</h2>
+                <div class="photos-list" id="photos-list">
+                    <!-- Photo list -->
+
+                </div>
+                <br />
+                <button class="button accent-button" onClick="submitAlbum();">
+                	Create album
+                </button>
+            </form>
+        </div>
 	</body>
 </html>

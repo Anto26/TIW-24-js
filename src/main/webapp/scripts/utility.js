@@ -2,6 +2,10 @@ const baseUrl = window.location.origin + '/TIW-24-js';
 const checkAvailabilityUrl = baseUrl + '/checkAvailability';
 const getAlbumsUrl = baseUrl + '/getAlbums';
 const getMeUrl = baseUrl + '/getMe';
+const getUserImagesUrl = baseUrl + '/getUserImages';
+const createAlbumUrl = baseUrl + '/createAlbum';
+const uploadImageUrl = baseUrl + '/uploadImage';
+
 
 function asyncXHR(urlString, paramsInitCallback, onResponseCallback) {
 	const url = new URL(urlString);
@@ -43,4 +47,21 @@ function displayFine(fine, type) {
     	finePopup.classList.add("fine-popup-show")
     	setTimeout(() => {finePopup.classList.remove("fine-popup-show")}, 4000);
     }
+
+function sendFormData(urlString, form, onResponseCallback) {
+	const url = new URL(urlString);
+	const xmlHttpRequest = new XMLHttpRequest();
+	var formData = form;	
+	xmlHttpRequest.withCredentials = true;	
+	xmlHttpRequest.onreadystatechange = () => {
+		if (xmlHttpRequest.readyState === 4) {
+			console.log(xmlHttpRequest.response);
+			const response = JSON.parse(xmlHttpRequest.response);
+			onResponseCallback(response);
+		}
+	};
+	
+	xmlHttpRequest.open("POST", url, true);
+	xmlHttpRequest.setRequestHeader("Content-Type", "multipart/form-data");
+	xmlHttpRequest.send(formData);
 }
