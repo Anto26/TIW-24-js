@@ -354,6 +354,8 @@ function showImgModal(img) {
     sendComment.addEventListener('click', () => {
     	if(textComment.value.length > 4096) {
     		displayError('The comment is too long');
+    	} else if (textComment.value === '') {
+    		displayError('The comment cannot be empty') 
     	} else {
     		asyncXHR(addCommentUrl,
     			(url) => {
@@ -387,15 +389,17 @@ function showImgModal(img) {
 			);
     	}
     });
+
     // Close modal when it is clicked out of the modal
-    document.getElementById("img-modal").addEventListener("click", (e) => {
+    document.querySelector("#img-modal").addEventListener("click", (e) => {
 		console.log("Lol");
-		if (e.target == document.getElementById("img-modal")) {
+		if (e.target == document.querySelector("#img-modal")) {
 			modal.remove();
 		} else {
 			e.stopPropagation();
 		}
 	});
+
     // Close modal when span with 'X' icon clicked
     const close = document.querySelector(".close");
     close.addEventListener('click', () => {
