@@ -5,7 +5,7 @@ const getMeUrl = baseUrl + '/getMe';
 const getUserImagesUrl = baseUrl + '/getUserImages';
 const createAlbumUrl = baseUrl + '/createAlbum';
 const uploadImageUrl = baseUrl + '/uploadImage';
-
+const getImagesUrl = baseUrl + '/getImages';
 
 function asyncXHR(urlString, paramsInitCallback, onResponseCallback) {
 	const url = new URL(urlString);

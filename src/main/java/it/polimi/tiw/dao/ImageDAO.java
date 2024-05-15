@@ -42,9 +42,9 @@ public class ImageDAO implements DAO<Image, Integer> {
 		getPersonImagesStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE uploader_id = ?");
 		getAlbumThumbnailStatement = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id WHERE ia.album_id=? ORDER BY upload_date DESC, id DESC;");
 		getAlbumImagesStatement = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id WHERE ia.album_id = ? ORDER BY i.upload_date DESC, i.id DESC");
-		getAlbumImagesWithCommentsStatement = dbConnection.prepareStatement("SELECT * "
-				+ "FROM (image i JOIN image_album ia ) LEFT JOIN (text_comment c JOIN person uploader JOIN person author) "
-				+ "ON i.id=ia.image_id AND i.uploader_id = uploader.id AND c.image_id = i.id AND c.author_id = author.id "
+		getAlbumImagesWithCommentsStatement = dbConnection.prepareStatement("SELECT * \n"
+				+ "FROM (image i JOIN image_album ia on i.id=ia.image_id) LEFT JOIN (text_comment c JOIN person uploader JOIN person author)\n"
+				+ "ON i.uploader_id = uploader.id AND c.image_id = i.id AND c.author_id = author.id\n"
 				+ "WHERE ia.album_id = ? ORDER BY i.upload_date DESC, i.id DESC; ");
 	}
 
@@ -148,7 +148,7 @@ public class ImageDAO implements DAO<Image, Integer> {
 			Comment fetchedComment = CommentDAO.commentFromResult(result, "c.");
 			
 			List<Pair<Person, Comment>> commentList;
-			if (images.containsKey(fetchedComment)) {
+			if (images.containsKey(fetchedImage)) {
 				commentList = images.get(fetchedImage).second();
 			} else {
 				commentList = new ArrayList<Pair<Person, Comment>>();
