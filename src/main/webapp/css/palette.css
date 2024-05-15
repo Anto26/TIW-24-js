@@ -10,11 +10,11 @@
     --button-color: #CED0D5;
     --button-overlay: #8c8fa1;
     --link-color: #A092F3;
-    --error-outline: #d20f39;
-    --error-backgorund: rgba(220, 138, 120, 0.9);
+    --error-outline: #d22249;
+    --error-backgorund: rgba(205, 186, 199, 0.97);
     --error-fg-color: #000000;
-    --fine-outline: #46f53d;
-    --fine-backgorund: rgba(126, 245, 120, 0.9);
+    --fine-outline: #4ea53d;
+    --fine-backgorund: rgba(188, 203, 197, 0.97);
     --fine-fg-color: #000000;
     --transparent: rgba(0, 0, 0, 0);
 

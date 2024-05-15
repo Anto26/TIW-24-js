@@ -1,6 +1,8 @@
 // General elements
 const errorPopup = document.querySelector('#error-popup');
 const errorMessage = document.querySelector('#error-message');
+const finePopup = document.querySelector('#fine-popup');
+const fineMessage = document.querySelector('#fine-message');
 
 // Navbar elements
 const homeButton = document.querySelector("#home-button");
@@ -292,6 +294,8 @@ function albumPagePrevious() {
 	populateAlbumImages(albumImages);
 }
 
+// Image Page
+
 function showImgModal(img) {
     // Create the modal
     const modal = document.createElement('div');
@@ -308,18 +312,21 @@ function showImgModal(img) {
 					<h1 style="margin-bottom: 0px">${img.title}</h1>
 					<p>${img.description}</p>
 					<p style="margin-top: 2px;">Created by ${img.uploader.username} on ${img.date}</p>
-					<img src="images/${img.file_path}">
-
-					<div class="comments">
-						<h2>Comments</h2>
-						<div id="comments-container"></div>
-
-						<!--Input form-->
-						<br />
-						<div>
-							<label class="input-label">Add comment</label> 
-							<input type="text" id="text-comment" name="text" class="input" />
-							<button type="button" id="send-comment" class="button accent-button">Send</button>
+					<div style="overflow-x: scroll; overflow-y: scroll">
+						<img src="images/${img.file_path}">
+					</div>
+					<div class="centerdiv">
+						<div class="comments">
+							<h2>Comments</h2>
+							<div id="comments-container"></div>
+	
+							<!--Input form-->
+							<br />
+							<div>
+								<label class="input-label">Add comment</label> 
+								<input type="text" id="text-comment" name="text" class="input" />
+								<button type="button" id="send-comment" class="button accent-button">Send</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -362,7 +369,7 @@ function showImgModal(img) {
 							<p class="comment-author">${username}</p>
 							<p class="comment-text">${textComment.value}</p>`;
 				        commentContainer.appendChild(commentObj);
-
+						textComment.value = "";
 				        // Add comment to local image object
 				        img.comments.push({
 			        		id: "", 
@@ -372,14 +379,23 @@ function showImgModal(img) {
 			        			username: username
 			        		}
 			        	});
+			        	displayFine("Comment added");
     				} else {
-    					displayError('Comment not sent due to server errro, try again later');
+    					displayError(response.result);
     				}
     			}
 			);
     	}
     });
-
+    // Close modal when it is clicked out of the modal
+    document.getElementById("img-modal").addEventListener("click", (e) => {
+		console.log("Lol");
+		if (e.target == document.getElementById("img-modal")) {
+			modal.remove();
+		} else {
+			e.stopPropagation();
+		}
+	});
     // Close modal when span with 'X' icon clicked
     const close = document.querySelector(".close");
     close.addEventListener('click', () => {

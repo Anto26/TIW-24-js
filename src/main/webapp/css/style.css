@@ -150,23 +150,6 @@ p {
     margin-bottom: 10px;
 }
 
-.error-popup {
-    position: absolute;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
-    text-align: center;
-    margin-top: -100px;
-    width: 80%;
-    max-width: 500px;
-    transition: margin-top cubic-bezier(0.075, 0.82, 0.165, 1) 1s;
-}
-
-.error-popup-show {
-    margin-top: 100px !important;
-}
-
 .fine-container {
     border: 2px solid var(--fine-outline);
     background-color: var(--fine-backgorund);
@@ -177,8 +160,8 @@ p {
     margin-bottom: 10px;
 }
 
-.fine-popup {
-    position: absolute;
+.popup {
+    position: fixed;
     margin-left: auto;
     margin-right: auto;
     left: 0;
@@ -188,8 +171,9 @@ p {
     width: 80%;
     max-width: 500px;
     transition: margin-top cubic-bezier(0.075, 0.82, 0.165, 1) 1s;
+    z-index: 1000;
 }
 
-.fine-popup-show {
+.popup-show {
     margin-top: 100px !important;
 }
