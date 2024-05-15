@@ -47,6 +47,7 @@ function displayFine(fine, type) {
     	finePopup.classList.add("fine-popup-show")
     	setTimeout(() => {finePopup.classList.remove("fine-popup-show")}, 4000);
     }
+}
 
 function sendFormData(urlString, form, onResponseCallback) {
 	const url = new URL(urlString);
