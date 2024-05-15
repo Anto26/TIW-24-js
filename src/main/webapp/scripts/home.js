@@ -256,9 +256,9 @@ function populateAlbumImages(albumImages) {
 								<img src="images/${image.file_path}" class="image-thumbnail"/>
 							</div>
         `;
-        }
         thumbnail = photo.querySelector(".image-thumbnail");
         thumbnail.addEventListener("mouseover",() => {showImgModal(image);});
+        }
 		container.appendChild(photo);
 		i++;
 	});
