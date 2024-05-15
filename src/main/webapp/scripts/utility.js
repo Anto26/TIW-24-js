@@ -1,4 +1,4 @@
-const baseUrl = window.location.origin + '/TIW-24-js';
+const baseUrl = window.location.origin + '/TIW-24-jss';
 const checkAvailabilityUrl = baseUrl + '/checkAvailability';
 const getAlbumsUrl = baseUrl + '/getAlbums';
 const getMeUrl = baseUrl + '/getMe';
@@ -49,10 +49,11 @@ function displayFine(fine, type) {
     }
 }
 
-function sendFormData(urlString, form, onResponseCallback) {
+function sendFormData(urlString, paramsInitCallback, form, onResponseCallback) {
 	const url = new URL(urlString);
+	paramsInitCallback(url);
 	const xmlHttpRequest = new XMLHttpRequest();
-	var formData = form;	
+	var formData = form;
 	xmlHttpRequest.withCredentials = true;	
 	xmlHttpRequest.onreadystatechange = () => {
 		if (xmlHttpRequest.readyState === 4) {
@@ -63,6 +64,6 @@ function sendFormData(urlString, form, onResponseCallback) {
 	};
 	
 	xmlHttpRequest.open("POST", url, true);
-	xmlHttpRequest.setRequestHeader("Content-Type", "multipart/form-data");
+	//xmlHttpRequest.setRequestHeader("Content-Type", "multipart/form-data");
 	xmlHttpRequest.send(formData);
 }

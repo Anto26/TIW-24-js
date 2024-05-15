@@ -42,13 +42,7 @@ function showCreateAlbumPage() {
     createAlbumPage.setAttribute("style", "");
     createAlbumButton.setAttribute("style", "display:none");
     homeButton.setAttribute("style", "");
-    asyncXHR(getUserImagesUrl, (url) => {return url;}, (response) => {
-        if (response.ok) {
-            // Populate images
-            images = response.result;
-            refreshImages(images);
-        }
-    });
+    refreshImages();
 }
 
 function showHomePage() {
@@ -107,8 +101,17 @@ function populateAlbums(albums) {
       });
 }
 
-function refreshImages(images) {
-    photoList.innerHTML = '';
+function refreshImages() {
+	photoList.innerHTML = '';
+	asyncXHR(getUserImagesUrl, (url) => {return url;}, (response) => {
+        if (response.ok) {
+            // Populate images
+            images = response.result;
+            populateImages(images);
+        }
+    });
+}
+function populateImages(images) {
     images.forEach(image => {
         // Create the card container
         const photo = document.createElement("div");
@@ -127,13 +130,25 @@ function refreshImages(images) {
 
 function submitImage() {
 	form = document.getElementById("image-form");
+	title = document.getElementById("image-title").value;
+	description = document.getElementById("image-description").value;
 	file = document.getElementById("image-upload");
 	var sendForm = new FormData();
-	sendForm.append("title", "Ciao");
-	sendForm.append("description", "adfadsf");
-	//sendForm.append("image", file.files[0]);
-	sendFormData(uploadImageUrl, sendForm, (response) => {
-		console.log(response);
+	//sendForm.append("title", "Ciao");
+	//sendForm.append("description", "adfadsf");
+	sendForm.append("image", file.files[0]);
+	sendFormData(uploadImageUrl, (url) =>  {
+		url.searchParams.append("title", title);
+		url.searchParams.append("description", description);
+		url.searchParams.append("fileName", file.files[0].name);
+	}, 
+	sendForm, 
+	(response) => {
+		if (response.ok) {
+			refreshImages();
+		} else {
+			displayError(response.result);
+		}
 	});
 }
 

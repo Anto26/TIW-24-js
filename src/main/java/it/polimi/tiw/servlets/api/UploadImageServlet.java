@@ -75,8 +75,12 @@ public class UploadImageServlet extends ApiServlet {
 		}
 		InputStream imageContent = imagePart.getInputStream();
 		String submitted = imagePart.getSubmittedFileName();
-		String extension = submitted.substring(submitted.lastIndexOf("."));
-		imagePart.getSubmittedFileName().lastIndexOf(".");
+		String extension;
+		if (submitted != null) {
+			extension = submitted.substring(submitted.lastIndexOf("."));
+		} else {
+			extension = ".png";
+		}
 		String image_path = CreateAlbumUtility.getRandomFilePath(context.getInitParameter("uploadDir"), extension);
 		String full_path = context.getInitParameter("uploadDir") + image_path;
 
@@ -97,7 +101,6 @@ public class UploadImageServlet extends ApiServlet {
 			this.badRequestResponse(response, "Error connecting to the database");
 			return;
 		}
-		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
