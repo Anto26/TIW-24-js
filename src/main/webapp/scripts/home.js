@@ -1,9 +1,11 @@
 // General elements
 const errorPopup = document.querySelector('#error-popup');
-const errorMessage = document.querySelector('#error-message')
+const errorMessage = document.querySelector('#error-message');
+
 // Navbar elements
 const homeButton = document.querySelector("#home-button");
 const createAlbumButton = document.querySelector("#create-album-button");
+
 // Home page elements
 const homePage = document.querySelector('#homepage')
 const userAlbumsDiv = document.querySelector('#user-albums');
@@ -30,6 +32,7 @@ asyncXHR(getMeUrl,
 	(response) => {
 		if (response.ok) {
 			username = response.result.username;
+
 			usernameHeader.textContent = username;
 			// Populate albums
 			asyncXHR(getAlbumsUrl, (url) => { return url; }, (response) => {
@@ -215,10 +218,12 @@ function refreshAlbumPage(id) {
 		}
 	)
 }
+
 function populateAlbumInfo(album) {
 	document.getElementById("album-page-title").innerHTML = album.title;
 	document.getElementById("album-page-author").innerHTML = album.creator.username + " - " + album.creation_date;
 }
+
 function populateAlbumImages(albumImages) {
 	// Calculate maxPage
 	maxPage = 0;
@@ -242,6 +247,7 @@ function populateAlbumImages(albumImages) {
 		shownImages[currentIndex] = albumImages[i];
 		currentIndex++;
 	}
+
 	i = 0;
 	shownImages.forEach(image => {
 		// Create the card container
@@ -250,18 +256,19 @@ function populateAlbumImages(albumImages) {
 		const photo = document.createElement("div");
 		// Add inner HTML
 		if (image != null) {
-		photo.innerHTML = `
-							<p class="image-title">${image.title}</p>
-							<div>
-								<img src="images/${image.file_path}" class="image-thumbnail"/>
-							</div>
-        `;
-        thumbnail = photo.querySelector(".image-thumbnail");
-        thumbnail.addEventListener("mouseover",() => {showImgModal(image);});
+			photo.innerHTML = `
+								<p class="image-title">${image.title}</p>
+								<div>
+									<img src="images/${image.file_path}" class="image-thumbnail"/>
+								</div>
+	        `;
+	        thumbnail = photo.querySelector(".image-thumbnail");
+	        thumbnail.addEventListener("mouseover",() => {showImgModal(image);});
         }
 		container.appendChild(photo);
 		i++;
 	});
+
 	if (page != 0) {
 		document.getElementById("back-button").setAttribute("style", "");
 	} else {
@@ -275,9 +282,6 @@ function populateAlbumImages(albumImages) {
 	}
 }
 
-function showImgModal(image) {
-	// Dosomething
-}
 function albumPageNext() {
 	page++;
 	populateAlbumImages(albumImages);
@@ -286,4 +290,99 @@ function albumPageNext() {
 function albumPagePrevious() {
 	page--;
 	populateAlbumImages(albumImages);
+}
+
+function showImgModal(img) {
+    // Create the modal
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+    	<!--  Image modal -->
+        <div id="img-modal" class="modal">
+            
+            <!-- Modal content -->
+            <div class="modal-content">
+
+            	<span class="close">&times;</span>
+
+				<div class="image-page">
+					<h1 style="margin-bottom: 0px">${img.title}</h1>
+					<p>${img.description}</p>
+					<p style="margin-top: 2px;">Created by ${img.uploader.username} on ${img.date}</p>
+					<img src="images/${img.file_path}">
+
+					<div class="comments">
+						<h2>Comments</h2>
+						<div id="comments-container"></div>
+
+						<!--Input form-->
+						<br />
+						<div>
+							<label class="input-label">Add comment</label> 
+							<input type="text" id="text-comment" name="text" class="input" />
+							<button type="button" id="send-comment" class="button accent-button">Send</button>
+						</div>
+					</div>
+				</div>
+            </div>
+        </div>`;
+
+    // Show modal in body
+    document.querySelector('body').appendChild(modal);
+
+    // Add comments to modal
+    const commentContainer = document.querySelector('#comments-container');
+    img.comments.forEach(comment => {
+        const commentObj = document.createElement('div');
+        commentObj.classList = 'comment'
+        commentObj.innerHTML = `
+			<p class="comment-author">${comment.author.username}</p>
+			<p class="comment-text">${comment.content}</p>`;
+
+        commentContainer.appendChild(commentObj);
+    });
+
+    // Listen for send comment interaction
+    const sendComment = document.querySelector('#send-comment');
+    const textComment = document.querySelector('#text-comment');
+    sendComment.addEventListener('click', () => {
+    	if(textComment.value.length > 4096) {
+    		displayError('The comment is too long');
+    	} else {
+    		asyncXHR(addCommentUrl,
+    			(url) => {
+    				url.searchParams.append("imgId", img.id);
+    				url.searchParams.append("text", textComment.value);
+    			},
+    			(response) => {
+    				if (response.ok) {
+    					// Add comment to view
+    					const commentObj = document.createElement('div');
+				        commentObj.classList = 'comment'
+				        commentObj.innerHTML = `
+							<p class="comment-author">${username}</p>
+							<p class="comment-text">${textComment.value}</p>`;
+				        commentContainer.appendChild(commentObj);
+
+				        // Add comment to local image object
+				        img.comments.push({
+			        		id: "", 
+			        		content: textComment.value,
+			        		author: {
+			        			id: "",
+			        			username: username
+			        		}
+			        	});
+    				} else {
+    					displayError('Comment not sent due to server errro, try again later');
+    				}
+    			}
+			);
+    	}
+    });
+
+    // Close modal when span with 'X' icon clicked
+    const close = document.querySelector(".close");
+    close.addEventListener('click', () => {
+      modal.remove();
+    });
 }
