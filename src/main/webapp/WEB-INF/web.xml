@@ -42,6 +42,8 @@
 		<url-pattern>/uploadImage</url-pattern>
 		<url-pattern>/deleteImage</url-pattern>
 		<url-pattern>/getUserImages</url-pattern>
+		<url-pattern>/addOrder</url-pattern>
+		<url-pattern>/deleteOrder</url-pattern>
 	</filter-mapping>
 	
 	<error-page>

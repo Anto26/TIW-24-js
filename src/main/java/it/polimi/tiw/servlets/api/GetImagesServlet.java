@@ -45,6 +45,8 @@ public class GetImagesServlet extends ApiServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		setJsonContent(response);
+		Person user = (Person) request.getSession().getAttribute("user");
+
 		String albumId = request.getParameter("albumId");
 		if (albumId == null || !GeneralUtility.isNumeric(albumId)) {
 			this.badRequestResponse(response, "albumId parameter not specified or wrong");
@@ -61,7 +63,7 @@ public class GetImagesServlet extends ApiServlet {
 			}
 			Optional<Person> creator = personDAO.get(album.get().getCreatorId());
 			// The album is available
-			LinkedHashMap<Image, Pair<Person, List<Pair<Person, Comment>>>> res = imageDAO.getAlbumImagesWithComments(album.get());
+			LinkedHashMap<Image, Pair<Person, List<Pair<Person, Comment>>>> res = imageDAO.getAlbumImagesWithCommentsOrdered(album.get(), user);
 			JsonObject result = JsonUtility.mapToAlbumPage(album.get(), creator.get(), res);
 			this.goodRequestResponse(response, result);
 		} catch (SQLException e) {

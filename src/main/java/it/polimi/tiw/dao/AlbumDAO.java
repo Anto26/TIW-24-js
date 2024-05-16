@@ -34,6 +34,8 @@ public class AlbumDAO implements DAO<Album, Integer> {
 	private PreparedStatement getOtherAlbumsAndUsers;
 	private PreparedStatement getAlbumsAndUserByUser;
 	private PreparedStatement deleteEmptyAlbums;
+	private PreparedStatement addPriorityStatement;
+	private PreparedStatement deleteOrderStatement;
 	
 	public AlbumDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
@@ -58,6 +60,8 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		getOtherAlbumsAndUsers = dbConnection.prepareStatement("SELECT * FROM album a JOIN person p ON a.creator_id = p.id WHERE a.creator_id = ?");
 		getAlbumsAndUserByUser = dbConnection.prepareStatement("SELECT * FROM album a JOIN person p ON a.creator_id = p.id WHERE a.creator_id <> ?");
 		deleteEmptyAlbums = dbConnection.prepareStatement("DELETE FROM album a WHERE 0 = (SELECT COUNT(*) FROM image_album ap WHERE ap.album_id=a.id);");	
+		deleteOrderStatement = dbConnection.prepareStatement("DELETE FROM album_order WHERE person_id = ? AND album_id = ?");
+		addPriorityStatement = dbConnection.prepareStatement("INSERT INTO album_order (person_id, album_id, image_id, priority)  VALUES (?, ?, ?, ?);");
 	}
 	
 	@Override
@@ -108,6 +112,20 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		Optional<Album> newAlbum = DAOUtility.tryToSave(this, saveStatement);
 		
 		return newAlbum;
+	}
+	
+	public void addPriority(Album album, Person p, Integer imgId, Integer priority) throws SQLException {
+		addPriorityStatement.setInt(1, p.getId());
+		addPriorityStatement.setInt(2, album.getId());
+		addPriorityStatement.setInt(3, imgId);
+		addPriorityStatement.setInt(4, priority);
+		addPriorityStatement.executeUpdate();
+	}
+	
+	public void deleteOrder(Album album, Person p) throws SQLException {
+		deleteOrderStatement.setInt(1, p.getId());
+		deleteOrderStatement.setInt(2, album.getId());
+		deleteOrderStatement.executeUpdate();
 	}
 
 	@Override
