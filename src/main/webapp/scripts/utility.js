@@ -1,4 +1,4 @@
-const baseUrl = window.location.origin + '/TIW-24-jss';
+const baseUrl = window.location.origin + '/TIW-24-js';
 const checkAvailabilityUrl = baseUrl + '/checkAvailability';
 const getAlbumsUrl = baseUrl + '/getAlbums';
 const getMeUrl = baseUrl + '/getMe';
@@ -7,6 +7,7 @@ const createAlbumUrl = baseUrl + '/createAlbum';
 const uploadImageUrl = baseUrl + '/uploadImage';
 const getImagesUrl = baseUrl + '/getImages';
 const addCommentUrl = baseUrl + '/addComment';
+const addOrderUrl = baseUrl + '/addOrder';
 
 function asyncXHR(urlString, paramsInitCallback, onResponseCallback) {
 	const url = new URL(urlString);

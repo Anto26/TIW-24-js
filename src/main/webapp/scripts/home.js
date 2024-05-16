@@ -28,6 +28,9 @@ var albumImages;
 var page = 0;
 var currentAlbum;
 
+// Reorder modal elements
+var dragged;
+
 // Make initial request to get information for home page
 asyncXHR(getMeUrl,
 	(url) => { },
@@ -80,20 +83,24 @@ function showAlbumPage(id) {
 	refreshAlbumPage(id);
 }
 
-// Home page functions
+// === Home page functions
 
 function refreshAlbums() {
 	userAlbumsDiv.innerHTML = "";
 	othersAlbumsDiv.innerHTML = "";
-	asyncXHR(getAlbumsUrl, (url) => { return url; }, (response) => {
-		if (response.ok) {
-			albums = response.result;
-			populateAlbums(albums);
-		} else {
-			displayError(response.result);
+	asyncXHR(getAlbumsUrl,
+		(url) => { },
+		(response) => {
+			if (response.ok) {
+				albums = response.result;
+				populateAlbums(albums);
+			} else {
+				displayError(response.result);
+			}
 		}
-	});
+	);
 }
+
 function populateAlbums(albums) {
 	albums.forEach(album => {
 		// Create the card container
@@ -129,7 +136,7 @@ function populateAlbums(albums) {
 }
 
 
-// Create Album page functions
+// === Create Album page functions
 
 function refreshImages() {
 	photoList.innerHTML = '';
@@ -204,7 +211,8 @@ function submitAlbum() {
 
 
 
-// Album page functions
+// === Album page functions
+
 function refreshAlbumPage(id) {
 	asyncXHR(getImagesUrl,
 		(url) => {
@@ -264,9 +272,9 @@ function populateAlbumImages(albumImages) {
 									<img src="images/${image.file_path}" class="image-thumbnail"/>
 								</div>
 	        `;
-	        thumbnail = photo.querySelector(".image-thumbnail");
-	        thumbnail.addEventListener("mouseover",() => {showImgModal(image);});
-        }
+			thumbnail = photo.querySelector(".image-thumbnail");
+			thumbnail.addEventListener("mouseover", () => { showImgModal(image); });
+		}
 		container.appendChild(photo);
 		i++;
 	});
@@ -276,7 +284,7 @@ function populateAlbumImages(albumImages) {
 	} else {
 		document.getElementById("back-button").setAttribute("style", "display:none;");
 	}
-	
+
 	if (page < maxPage) {
 		document.getElementById("next-button").setAttribute("style", "");
 	} else {
@@ -294,12 +302,12 @@ function albumPagePrevious() {
 	populateAlbumImages(albumImages);
 }
 
-// Image Page
+// === Image Page
 
 function showImgModal(img) {
-    // Create the modal
-    const modal = document.createElement('div');
-    modal.innerHTML = `
+	// Create the modal
+	const modal = document.createElement('div');
+	modal.innerHTML = `
     	<!--  Image modal -->
         <div id="img-modal" class="modal">
             
@@ -333,66 +341,65 @@ function showImgModal(img) {
             </div>
         </div>`;
 
-    // Show modal in body
-    document.querySelector('body').appendChild(modal);
+	// Show modal in body
+	document.querySelector('body').appendChild(modal);
 
-    // Add comments to modal
-    const commentContainer = document.querySelector('#comments-container');
-    img.comments.forEach(comment => {
-        const commentObj = document.createElement('div');
-        commentObj.classList = 'comment'
-        commentObj.innerHTML = `
+	// Add comments to modal
+	const commentContainer = document.querySelector('#comments-container');
+	img.comments.forEach(comment => {
+		const commentObj = document.createElement('div');
+		commentObj.classList = 'comment'
+		commentObj.innerHTML = `
 			<p class="comment-author">${comment.author.username}</p>
 			<p class="comment-text">${comment.content}</p>`;
 
-        commentContainer.appendChild(commentObj);
-    });
+		commentContainer.appendChild(commentObj);
+	});
 
-    // Listen for send comment interaction
-    const sendComment = document.querySelector('#send-comment');
-    const textComment = document.querySelector('#text-comment');
-    sendComment.addEventListener('click', () => {
-    	if(textComment.value.length > 4096) {
-    		displayError('The comment is too long');
-    	} else if (textComment.value === '') {
-    		displayError('The comment cannot be empty') 
-    	} else {
-    		asyncXHR(addCommentUrl,
-    			(url) => {
-    				url.searchParams.append("imgId", img.id);
-    				url.searchParams.append("text", textComment.value);
-    			},
-    			(response) => {
-    				if (response.ok) {
-    					// Add comment to view
-    					const commentObj = document.createElement('div');
-				        commentObj.classList = 'comment'
-				        commentObj.innerHTML = `
+	// Listen for send comment interaction
+	const sendComment = document.querySelector('#send-comment');
+	const textComment = document.querySelector('#text-comment');
+	sendComment.addEventListener('click', () => {
+		if (textComment.value.length > 4096) {
+			displayError('The comment is too long');
+		} else if (textComment.value === '') {
+			displayError('The comment cannot be empty')
+		} else {
+			asyncXHR(addCommentUrl,
+				(url) => {
+					url.searchParams.append("imgId", img.id);
+					url.searchParams.append("text", textComment.value);
+				},
+				(response) => {
+					if (response.ok) {
+						// Add comment to view
+						const commentObj = document.createElement('div');
+						commentObj.classList = 'comment'
+						commentObj.innerHTML = `
 							<p class="comment-author">${username}</p>
 							<p class="comment-text">${textComment.value}</p>`;
-				        commentContainer.appendChild(commentObj);
+						commentContainer.appendChild(commentObj);
 						textComment.value = "";
-				        // Add comment to local image object
-				        img.comments.push({
-			        		id: "", 
-			        		content: textComment.value,
-			        		author: {
-			        			id: "",
-			        			username: username
-			        		}
-			        	});
-			        	displayFine("Comment added");
-    				} else {
-    					displayError(response.result);
-    				}
-    			}
+						// Add comment to local image object
+						img.comments.push({
+							id: "",
+							content: textComment.value,
+							author: {
+								id: "",
+								username: username
+							}
+						});
+						displayFine("Comment added");
+					} else {
+						displayError(response.result);
+					}
+				}
 			);
-    	}
-    });
+		}
+	});
 
-    // Close modal when it is clicked out of the modal
-    document.querySelector("#img-modal").addEventListener("click", (e) => {
-		console.log("Lol");
+	// Close modal when it is clicked out of the modal
+	document.querySelector("#img-modal").addEventListener("click", (e) => {
 		if (e.target == document.querySelector("#img-modal")) {
 			modal.remove();
 		} else {
@@ -400,9 +407,139 @@ function showImgModal(img) {
 		}
 	});
 
-    // Close modal when span with 'X' icon clicked
-    const close = document.querySelector(".close");
-    close.addEventListener('click', () => {
-      modal.remove();
-    });
+	// Close modal when span with 'X' icon clicked
+	const close = document.querySelector(".close");
+	close.addEventListener('click', () => {
+		modal.remove();
+	});
+}
+
+// === Reorder page
+
+function swapNodes(node1, node2) {
+	const parent1 = node1.parentNode;
+	const parent2 = node2.parentNode;
+    parent1.appendChild(node2);
+  	parent2.appendChild(node1);
+}
+
+function saveOrder() {
+	asyncXHR(addOrderUrl,
+		(url) => {
+			url.searchParams.append("albumId", currentAlbum.id);
+			
+			const imageTable = document.querySelector('#image-table');
+			let priority = 0;
+	
+			// For each row in the images table
+			for (var i = imageTable.children.length-1; i >= 0; i--) {
+				let row = imageTable.children[i];
+				
+				// For each cell in the current row
+				for (var j = row.children.length-1; j >= 0; j--) {
+					let imageCell = row.children[j].children[0];
+					url.searchParams.append(imageCell.id, priority);
+					
+					priority++;
+				}
+			}
+		},
+		(response) => {
+			
+		}
+	);
+}
+
+function showReorderModal() {
+	// Create the modal
+	const modal = document.createElement('div');
+	modal.innerHTML = `
+    	<div id="reorder-modal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+        		<span class="close">&times;</span>
+        		<div>
+					<table>
+						<tbody id="image-table">
+							<tr id="image-container-0"></tr>
+						</tbody>
+					</table>
+					<button type="button" class="button" id="reorder-btn" onclick="saveOrder();">Save</button>
+            	</div>
+            </div>
+        </div>`;
+
+	// Show modal in body
+	document.querySelector('body').appendChild(modal);
+
+	// Add images to modal as cells in a table
+	const imageTable = document.querySelector('#image-table');
+	let rowCount = 0;
+	let cellCount = 0;
+	albumImages.forEach(img => {
+		if (cellCount === 5) {
+			cellCount = 0;
+			rowCount++;
+
+			const trObj = document.createElement('tr');
+			trObj.id = 'image-container-' + rowCount;
+
+			imageTable.appendChild(trObj);
+		}
+
+		const imgObj = document.createElement('td');
+		imgObj.innerHTML = `
+			<div class="image-cell dropzone droptarget draggable" draggable="true" id="${img.id}">
+				<p class="image-title">${img.title}</p>
+				<img src="images/${img.file_path}" class="image-thumbnail" />
+			</div>`;
+
+		document.querySelector('#image-container-' + rowCount).appendChild(imgObj);
+
+		cellCount++;
+	});
+
+	const draggables = document.querySelectorAll('.draggable');
+	draggables.forEach(draggable => {
+		draggable.addEventListener("dragstart", (event) => {
+			dragged = event.target.closest('div');
+		});
+	});
+
+	const dropTargets = document.querySelectorAll('.droptarget');
+	dropTargets.forEach(dropTarget => {
+		dropTarget.addEventListener("dragenter", (event) => {
+			event.preventDefault();
+		});
+		dropTarget.addEventListener("dragleave", (event) => {
+			event.preventDefault();
+		});
+		dropTarget.addEventListener("dragover", (event) => {
+			event.preventDefault();
+		});
+
+		// Reorder images on drop
+		dropTarget.addEventListener("drop", (event) => {
+			event.preventDefault();
+			
+			if(event.target.closest('div') !== dragged)
+				swapNodes(event.target.closest('div'), dragged);
+		});
+	});
+
+
+	// Close modal when it is clicked out of the modal
+	document.querySelector("#reorder-modal").addEventListener("click", (e) => {
+		if (e.target == document.querySelector("#reorder-modal")) {
+			modal.remove();
+		} else {
+			e.stopPropagation();
+		}
+	});
+
+	// Close modal when span with 'X' icon clicked
+	const close = document.querySelector(".close");
+	close.addEventListener('click', () => {
+		modal.remove();
+	});
 }
