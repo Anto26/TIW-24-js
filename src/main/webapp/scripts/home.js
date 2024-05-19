@@ -445,7 +445,13 @@ function saveOrder() {
 			}
 		},
 		(response) => {
-			
+			if (response.ok) {
+				displayFine("Order saved");
+				populateAlbumImages(response.result.images);
+				
+			} else {
+				displayError(response.result);
+			}
 		}
 	);
 }
@@ -464,7 +470,9 @@ function showReorderModal() {
 							<tr id="image-container-0"></tr>
 						</tbody>
 					</table>
-					<button type="button" class="button" id="reorder-btn" onclick="saveOrder();">Save</button>
+					<div class="centerdiv">
+						<button type="button" class="button accent-button" id="reorder-btn" onclick="saveOrder();">Save</button>
+					</div>
             	</div>
             </div>
         </div>`;
