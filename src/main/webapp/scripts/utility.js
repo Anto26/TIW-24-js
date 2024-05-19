@@ -8,6 +8,7 @@ const uploadImageUrl = baseUrl + '/uploadImage';
 const getImagesUrl = baseUrl + '/getImages';
 const addCommentUrl = baseUrl + '/addComment';
 const addOrderUrl = baseUrl + '/addOrder';
+const deleteImageUrl = baseUrl + '/deleteImage';
 
 function asyncXHR(urlString, paramsInitCallback, onResponseCallback) {
 	const url = new URL(urlString);

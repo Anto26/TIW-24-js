@@ -52,7 +52,6 @@ asyncXHR(getMeUrl,
 	}
 );
 
-
 function showCreateAlbumPage() {
 	homePage.setAttribute("style", "display:none;");
 	createAlbumPage.setAttribute("style", "");
@@ -320,6 +319,7 @@ function showImgModal(img) {
 					<h1 style="margin-bottom: 0px">${img.title}</h1>
 					<p>${img.description}</p>
 					<p style="margin-top: 2px;">Created by ${img.uploader.username} on ${img.date}</p>
+					<button class="button destructive-button delete-button" style="display:none;"> Delete</button>
 					<div style="overflow-x: scroll; overflow-y: scroll">
 						<img src="images/${img.file_path}">
 					</div>
@@ -340,7 +340,11 @@ function showImgModal(img) {
 				</div>
             </div>
         </div>`;
-
+	if (img.uploader.username == username) {
+		var button = modal.querySelector('.delete-button');
+		button.addEventListener("click", () => {deleteImage(img.id); modal.remove();});
+		button.setAttribute("style", "");
+	}
 	// Show modal in body
 	document.querySelector('body').appendChild(modal);
 
@@ -412,6 +416,21 @@ function showImgModal(img) {
 	close.addEventListener('click', () => {
 		modal.remove();
 	});
+}
+
+function deleteImage(imgId) {
+	asyncXHR(deleteImageUrl,
+		(url) => {url.searchParams.append("imgId", imgId);},
+		(response) => {
+			if (response.ok) {
+				refreshAlbumPage(currentAlbum.id);
+				displayFine("Image deleted");
+				modal.remove();
+			} else {
+				dipslayError(response.result);
+			}
+		}
+	);
 }
 
 // === Reorder page
