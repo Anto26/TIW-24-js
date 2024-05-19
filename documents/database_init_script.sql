@@ -23,7 +23,6 @@ CREATE TABLE image (
     file_path VARCHAR(255) NOT NULL,
     title VARCHAR(30) NOT NULL,
     description TEXT NOT NULL,
-    description TEXT NOT NULL,
     upload_date DATE NOT NULL DEFAULT (CURRENT_DATE),
     uploader_id INTEGER NOT NULL,
     
@@ -75,7 +74,7 @@ CREATE TABLE text_comment (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE album_orders (
+CREATE TABLE album_order (
 	person_id INTEGER NOT NULL,
 	album_id INTEGER NOT NULL,
 	image_id INTEGER NOT NULL,
