@@ -383,7 +383,6 @@ function showImgModal(img) {
 							<p class="comment-author">${username}</p>
 							<p class="comment-text">${textComment.value}</p>`;
 						commentContainer.appendChild(commentObj);
-						textComment.value = "";
 						// Add comment to local image object
 						img.comments.push({
 							id: "",
@@ -393,6 +392,7 @@ function showImgModal(img) {
 								username: username
 							}
 						});
+						textComment.value = "";
 						displayFine("Comment added");
 					} else {
 						displayError(response.result);
