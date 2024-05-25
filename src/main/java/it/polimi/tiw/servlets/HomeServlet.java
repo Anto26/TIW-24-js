@@ -39,25 +39,6 @@ public class HomeServlet extends ThymeleafServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
-		
-		// Get the logged user from the session and export it to the web context
-		Person user = (Person) request.getSession().getAttribute("user");
-		ctx.setVariable("user", user);
-		
-		// Get the logger user's albums and export them to the web context
-		try {
-			List<Album> userAlbums = albumDAO.getFromCreator(user);
-			LinkedHashMap<Album, Image> albumThumbnail = albumDAO.getAlbumThumbnailMap();
-			LinkedHashMap<Album, Person> albumAuthor = albumDAO.getAlbumAuthorMap();
-			
-			ctx.setVariable("userAlbums", userAlbums);
-			ctx.setVariable("allAlbums", albumAuthor.keySet());
-			ctx.setVariable("albumThumbnail", albumThumbnail);
-			ctx.setVariable("albumAuthor", albumAuthor);
-		} catch (SQLException e) {
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		
 		templateEngine.process("home", ctx, response.getWriter());
 	}
 
