@@ -47,12 +47,14 @@ public class ImageDAO implements DAO<Image, Integer> {
 				+ "FROM (image i JOIN image_album ia on i.id=ia.image_id) LEFT JOIN (text_comment c JOIN person uploader JOIN person author)\n"
 				+ "ON i.uploader_id = uploader.id AND c.image_id = i.id AND c.author_id = author.id\n"
 				+ "WHERE ia.album_id = ? ORDER BY i.upload_date DESC, i.id DESC; ");
-		getAlbumImagesWithCommentsOrderedStatement = dbConnection.prepareStatement("SELECT *\n"
-				+ "FROM (\n"
-				+ "((image i JOIN image_album ia on i.id=ia.image_id) LEFT JOIN person uploader ON i.uploader_id = uploader.id) LEFT JOIN (text_comment c JOIN person author)\n"
-				+ "ON c.image_id = i.id AND c.author_id = author.id\n"
-				+ ") LEFT JOIN album_order ao ON (ao.album_id = ia.album_id AND ia.image_id = ao.image_id)\n"
-				+ "WHERE ia.album_id = ? AND (ao.person_id is null or ao.person_id = ?)\n"
+		getAlbumImagesWithCommentsOrderedStatement = dbConnection.prepareStatement("SELECT * \n"
+				+ "FROM image i \n"
+				+ "	JOIN image_album ia on i.id=ia.image_id\n "
+				+ "	JOIN person uploader ON i.uploader_id = uploader.id\n "
+				+ "	LEFT JOIN text_comment c ON c.image_id = i.id \n "
+				+ "	LEFT JOIN person author ON c.author_id = author.id\n "
+				+ "	LEFT JOIN album_order ao ON ao.image_id=i.id AND ao.album_id=ia.album_id AND person_id = ?\n "
+				+ "WHERE ia.album_id = ? AND (ao.person_id is null or ao.person_id = ?)\n "
 				+ "ORDER BY ao.priority DESC, i.upload_date DESC, i.id DESC;");
 	}
 
@@ -171,8 +173,9 @@ public class ImageDAO implements DAO<Image, Integer> {
 	
 	public LinkedHashMap<Image, Pair<Person, List<Pair<Person, Comment>>>> getAlbumImagesWithCommentsOrdered(Album album, Person p) throws SQLException {
 		LinkedHashMap<Image, Pair<Person, List<Pair<Person, Comment>>>> images = new LinkedHashMap<>();
-		getAlbumImagesWithCommentsOrderedStatement.setInt(1, album.getId());
-		getAlbumImagesWithCommentsOrderedStatement.setInt(2, p.getId());
+		getAlbumImagesWithCommentsOrderedStatement.setInt(1, p.getId());
+		getAlbumImagesWithCommentsOrderedStatement.setInt(2, album.getId());
+		getAlbumImagesWithCommentsOrderedStatement.setInt(3, p.getId());
 		ResultSet result = getAlbumImagesWithCommentsOrderedStatement.executeQuery();
 		while(result.next()) {
 			// Fetch values
