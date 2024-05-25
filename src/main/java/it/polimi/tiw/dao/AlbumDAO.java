@@ -29,10 +29,7 @@ public class AlbumDAO implements DAO<Album, Integer> {
 	private PreparedStatement addImageStatement;
 	private PreparedStatement getFromCreatorAndName;
 	private PreparedStatement getAlbumAuthors;
-	private PreparedStatement getAlbumThumbnails;
 	private PreparedStatement getAlbumThumbnailsAndCreators;
-	private PreparedStatement getOtherAlbumsAndUsers;
-	private PreparedStatement getAlbumsAndUserByUser;
 	private PreparedStatement deleteEmptyAlbums;
 	private PreparedStatement addPriorityStatement;
 	private PreparedStatement deleteOrderStatement;
@@ -47,18 +44,11 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		getAllStatement = dbConnection.prepareStatement("SELECT * FROM album ORDER BY creation_date DESC, id DESC;");
 		getFromCreatorStatement = dbConnection.prepareStatement("SELECT * FROM album WHERE creator_id=? ORDER BY creation_date DESC, id DESC;");
 		addImageStatement = dbConnection.prepareStatement("INSERT INTO image_album (image_id, album_id, order_position) VALUES (?, ?, ?)");
-		getFromCreatorAndName = dbConnection.prepareStatement("SELECT * FROM album WHERE creator_id = ? AND title = ?");
 		getAlbumAuthors = dbConnection.prepareStatement("SELECT * FROM album a JOIN person p ON a.creator_id = p.id");
-		getAlbumThumbnails = dbConnection.prepareStatement("SELECT *"
-				+ " FROM image_album ap JOIN album a JOIN image i ON (ap.album_id = a.id AND ap.image_id = i.id)" 
-				+ " WHERE i.id <= (SELECT MIN(i2.id) FROM image_album ia2 JOIN image i2 ON i2.id = ia2.image_id  WHERE album_id = a.id);");
-		
 		getAlbumThumbnailsAndCreators = dbConnection.prepareStatement("SELECT * \n"
 				+ "FROM image_album ap JOIN album a JOIN image i JOIN person p ON (ap.album_id = a.id AND ap.image_id = i.id AND a.creator_id = p.id) \n"
 				+ "WHERE i.id <= (SELECT MIN(i2.id) FROM image_album ia2 JOIN image i2 ON i2.id = ia2.image_id  WHERE album_id = a.id)"
 				+ "ORDER BY a.creation_date DESC, a.id DESC;");
-		getOtherAlbumsAndUsers = dbConnection.prepareStatement("SELECT * FROM album a JOIN person p ON a.creator_id = p.id WHERE a.creator_id = ?");
-		getAlbumsAndUserByUser = dbConnection.prepareStatement("SELECT * FROM album a JOIN person p ON a.creator_id = p.id WHERE a.creator_id <> ?");
 		deleteEmptyAlbums = dbConnection.prepareStatement("DELETE FROM album a WHERE 0 = (SELECT COUNT(*) FROM image_album ap WHERE ap.album_id=a.id);");	
 		deleteOrderStatement = dbConnection.prepareStatement("DELETE FROM album_order WHERE person_id = ? AND album_id = ?");
 		addPriorityStatement = dbConnection.prepareStatement("INSERT INTO album_order (person_id, album_id, image_id, priority)  VALUES (?, ?, ?, ?);");

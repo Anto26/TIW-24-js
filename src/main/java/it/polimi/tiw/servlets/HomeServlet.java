@@ -22,7 +22,7 @@ public class HomeServlet extends ThymeleafServlet {
     private static final long serialVersionUID = -7297515526961117146L;
     
     private AlbumDAO albumDAO;
-
+    
 	public HomeServlet() {
         super();
     }

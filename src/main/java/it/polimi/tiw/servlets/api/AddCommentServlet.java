@@ -36,7 +36,6 @@ import it.polimi.tiw.utils.JsonUtility;
 @WebServlet("/addComment")
 public class AddCommentServlet extends ApiServlet {
     private static final long serialVersionUID = -7397515526960117146L;
-    private Gson gson = new Gson();
     
 	public AddCommentServlet() {
         super();

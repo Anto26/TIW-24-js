@@ -33,7 +33,6 @@ import it.polimi.tiw.utils.Pair;
 @WebServlet("/getUserImages")
 public class GetUserImagesServlet extends ApiServlet {
     private static final long serialVersionUID = -7291515526960117146L;
-    private Gson gson = new Gson();
     
 	public GetUserImagesServlet() {
         super();
