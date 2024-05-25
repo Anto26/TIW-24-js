@@ -36,8 +36,8 @@ import it.polimi.tiw.utils.JsonUtility;
 @WebServlet("/deleteImage")
 public class DeleteImageServlet extends ApiServlet {
     private static final long serialVersionUID = -7397515526960117146L;
-    private Gson gson = new Gson();
-    
+    private ImageDAO imageDAO;
+    private AlbumDAO albumDAO;
 	public DeleteImageServlet() {
         super();
     }
@@ -61,8 +61,8 @@ public class DeleteImageServlet extends ApiServlet {
 		Optional<Comment> c;
 		Optional<Image> img;
 		try {
-			ImageDAO imageDAO = new ImageDAO(this.dbConnection);
-			AlbumDAO albumDAO = new AlbumDAO(this.dbConnection);
+			imageDAO = new ImageDAO(this.dbConnection);
+			albumDAO = new AlbumDAO(this.dbConnection);
 			img = imageDAO.get(imgId);
 			if (img.isPresent()) {
 				if (img.get().getUploaderId() == user.getId()) {
@@ -85,5 +85,19 @@ public class DeleteImageServlet extends ApiServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
+	}
+	
+	public void destory() {
+		super.destroy();
+		try {
+			if (this.albumDAO != null) {
+				this.albumDAO.close();
+			}
+			if (this.imageDAO != null) {
+				this.imageDAO.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -27,7 +27,6 @@ import it.polimi.tiw.servlets.DataServlet;
 @WebServlet("/checkAvailability")
 public class CheckAvailabilityServlet extends ApiServlet {
     private static final long serialVersionUID = -7297515526960117146L;
-    private Gson gson = new Gson();
     
 	public CheckAvailabilityServlet() {
         super();

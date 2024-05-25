@@ -36,6 +36,8 @@ import it.polimi.tiw.utils.JsonUtility;
 @WebServlet("/addComment")
 public class AddCommentServlet extends ApiServlet {
     private static final long serialVersionUID = -7397515526960117146L;
+    private ImageDAO imageDAO;
+    private CommentDAO commentDAO;
     
 	public AddCommentServlet() {
         super();
@@ -59,8 +61,8 @@ public class AddCommentServlet extends ApiServlet {
 		Integer imgId = Integer.parseInt(imgParameter);
 		Optional<Comment> c;
 		try {
-			ImageDAO imageDAO = new ImageDAO(this.dbConnection);
-			CommentDAO commentDAO = new CommentDAO(this.dbConnection);
+			imageDAO = new ImageDAO(this.dbConnection);
+			commentDAO = new CommentDAO(this.dbConnection);
 			Optional<Image> img = imageDAO.get(imgId);
 			if (img.isPresent()) {
 				if (text.length() > 4096) {
@@ -81,5 +83,19 @@ public class AddCommentServlet extends ApiServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
+	}
+	
+	public void destory() {
+		super.destroy();
+		try {
+			if (this.commentDAO != null) {
+				this.commentDAO.close();
+			}
+			if (this.imageDAO != null) {
+				this.imageDAO.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

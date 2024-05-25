@@ -30,7 +30,7 @@ import it.polimi.tiw.utils.Pair;
 @WebServlet("/getAlbums")
 public class GetAlbumsServlet extends ApiServlet {
     private static final long serialVersionUID = -7297515526960117146L;
-    private Gson gson = new Gson();
+    private AlbumDAO albumDAO;
     
 	public GetAlbumsServlet() {
         super();
@@ -43,8 +43,8 @@ public class GetAlbumsServlet extends ApiServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		setJsonContent(response);
 		try {
-			AlbumDAO albumDao = new AlbumDAO(this.dbConnection);
-			LinkedHashMap<Album, Pair<Person, Image>> albums = albumDao.getAlbumThumbnailAndPersonMap();
+			albumDAO = new AlbumDAO(this.dbConnection);
+			LinkedHashMap<Album, Pair<Person, Image>> albums = albumDAO.getAlbumThumbnailAndPersonMap();
 			JsonArray result = JsonUtility.getAlbumsJsonObject(albums);
 			this.goodRequestResponse(response, result);
 		} catch (SQLException e) {
@@ -54,5 +54,16 @@ public class GetAlbumsServlet extends ApiServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
+	}
+	
+	public void destory() {
+		super.destroy();
+		try {
+			if (this.albumDAO != null) {
+				this.albumDAO.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

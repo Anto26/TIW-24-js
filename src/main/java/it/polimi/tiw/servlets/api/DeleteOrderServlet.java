@@ -31,7 +31,8 @@ import it.polimi.tiw.utils.Pair;
 @WebServlet("/deleteOrder")
 public class DeleteOrderServlet extends ApiServlet {
     private static final long serialVersionUID = -1397515526960117146L;
-    
+    private AlbumDAO albumDAO;
+
 	public DeleteOrderServlet() {
         super();
     }
@@ -52,7 +53,6 @@ public class DeleteOrderServlet extends ApiServlet {
 		}
 		Integer albumId = Integer.parseInt(albumParameter);
 		Album album = null;
-		AlbumDAO albumDAO;
 		try {
 			albumDAO = new AlbumDAO(this.dbConnection);
 			Optional<Album> fetchedAlbum = albumDAO.get(albumId);
@@ -81,5 +81,16 @@ public class DeleteOrderServlet extends ApiServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
+	}
+	
+	public void destory() {
+		super.destroy();
+		try {
+			if (this.albumDAO != null) {
+				this.albumDAO.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

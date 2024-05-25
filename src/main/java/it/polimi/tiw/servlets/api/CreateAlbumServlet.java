@@ -32,8 +32,8 @@ import it.polimi.tiw.utils.JsonUtility;
 @WebServlet("/createAlbum")
 public class CreateAlbumServlet extends ApiServlet {
     private static final long serialVersionUID = -7297515526960117146L;
-    private Gson gson = new Gson();
-    
+    private ImageDAO imageDAO;
+    private AlbumDAO albumDAO;
 	public CreateAlbumServlet() {
         super();
     }
@@ -54,8 +54,8 @@ public class CreateAlbumServlet extends ApiServlet {
 		}
 
 		try {
-			ImageDAO imageDAO = new ImageDAO(this.dbConnection);
-			AlbumDAO albumDAO = new AlbumDAO(this.dbConnection);
+			imageDAO = new ImageDAO(this.dbConnection);
+			albumDAO = new AlbumDAO(this.dbConnection);
 			// Get the list of the given parameters
 			Set<String> parameters = request.getParameterMap().keySet();
 			int[] ids = parameters.stream().filter(CreateAlbumUtility::isNumeric).mapToInt(Integer::parseInt).toArray();
@@ -92,5 +92,19 @@ public class CreateAlbumServlet extends ApiServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
+	}
+	
+	public void destory() {
+		super.destroy();
+		try {
+			if (this.albumDAO != null) {
+				this.albumDAO.close();
+			}
+			if (this.imageDAO != null) {
+				this.imageDAO.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

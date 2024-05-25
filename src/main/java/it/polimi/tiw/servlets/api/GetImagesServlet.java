@@ -33,7 +33,8 @@ import it.polimi.tiw.utils.Pair;
 @WebServlet("/getImages")
 public class GetImagesServlet extends ApiServlet {
     private static final long serialVersionUID = -7291515526960117146L;
-    private Gson gson = new Gson();
+    private ImageDAO imageDAO;
+    private AlbumDAO albumDAO;
     
 	public GetImagesServlet() {
         super();
@@ -53,8 +54,8 @@ public class GetImagesServlet extends ApiServlet {
 			return;
 		}
 		try {
-			AlbumDAO albumDAO = new AlbumDAO(this.dbConnection);
-			ImageDAO imageDAO = new ImageDAO(this.dbConnection);
+			albumDAO = new AlbumDAO(this.dbConnection);
+			imageDAO = new ImageDAO(this.dbConnection);
 
 			Optional<Album> album = albumDAO.get(Integer.valueOf(albumId));
 			if (album.isEmpty()) {
@@ -74,5 +75,19 @@ public class GetImagesServlet extends ApiServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
+	}
+	
+	public void destory() {
+		super.destroy();
+		try {
+			if (this.albumDAO != null) {
+				this.albumDAO.close();
+			}
+			if (this.imageDAO != null) {
+				this.imageDAO.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -14,7 +14,7 @@ import it.polimi.tiw.servlets.DataServlet;
 
 public class ApiServlet extends DataServlet {
     private static final long serialVersionUID = -7297515526911117146L;
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();;
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	void badRequestResponse(HttpServletResponse response, String message) throws IOException {
 		this.badRequestResponse(response, message, 400);

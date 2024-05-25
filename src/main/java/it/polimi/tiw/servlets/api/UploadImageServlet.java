@@ -40,6 +40,7 @@ maxRequestSize = 1024 * 1024 * 100 // 100MB
 )
 public class UploadImageServlet extends ApiServlet {
     private static final long serialVersionUID = -7297515526260117146L;
+    private ImageDAO imageDAO;
     
 	public UploadImageServlet() {
         super();
@@ -68,7 +69,6 @@ public class UploadImageServlet extends ApiServlet {
 
 		// Receive the file
 		Part imagePart = request.getPart("image");
-		System.out.println(imagePart.getSubmittedFileName());
 		if (imagePart.getContentType() != null && !imagePart.getContentType().split("/")[0].equals("image")) {
 			this.badRequestResponse(response, "The file given was not an image");
 			return;
@@ -94,7 +94,7 @@ public class UploadImageServlet extends ApiServlet {
 		}
 		// Try saving the image in the database
 		try {
-			ImageDAO imageDAO = new ImageDAO(this.dbConnection);
+			imageDAO = new ImageDAO(this.dbConnection);
 			Optional<Image> img = imageDAO.save(image_path, title, description, String.valueOf(user.getId()));
 			this.goodRequestResponse(response, JsonUtility.mapToJson(img.get()));
 		} catch (SQLException e) {
@@ -105,5 +105,16 @@ public class UploadImageServlet extends ApiServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.doGet(request, response);
+	}
+	
+	public void destory() {
+		super.destroy();
+		try {
+			if (this.imageDAO != null) {
+				this.imageDAO.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -33,6 +33,7 @@ import it.polimi.tiw.utils.Pair;
 @WebServlet("/getUserImages")
 public class GetUserImagesServlet extends ApiServlet {
     private static final long serialVersionUID = -7291515526960117146L;
+    private ImageDAO imageDAO;
     
 	public GetUserImagesServlet() {
         super();
@@ -46,7 +47,7 @@ public class GetUserImagesServlet extends ApiServlet {
 		setJsonContent(response);
 		Person user = (Person) request.getSession().getAttribute("user");
 		try {
-			ImageDAO imageDAO = new ImageDAO(this.dbConnection);
+			imageDAO = new ImageDAO(this.dbConnection);
 			
 			List<Image> imgs = imageDAO.getPersonImages(user);
 			this.goodRequestResponse(response, JsonUtility.mapToJson(imgs));
