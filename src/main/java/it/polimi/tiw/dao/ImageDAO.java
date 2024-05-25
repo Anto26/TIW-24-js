@@ -127,6 +127,10 @@ public class ImageDAO implements DAO<Image, Integer> {
 		updateStatement.close();
 		deleteStatement.close();
 		getAlbumThumbnailStatement.close();
+		getPersonImagesStatement.close();
+		getImageFromPathStatement.close();
+		getAlbumImagesStatement.close();
+		getAlbumImagesWithCommentsOrderedStatement.close();
 	}
 	
 	public List<Image> getPersonImages(Person person) throws SQLException {

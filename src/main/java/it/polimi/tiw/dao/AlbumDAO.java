@@ -144,6 +144,15 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		saveStatement.close();
 		updateStatement.close();
 		deleteStatement.close();
+		getAllStatement.close();
+		getFromCreatorStatement.close();;
+		addImageStatement.close();
+		getFromCreatorAndName.close();
+		getAlbumAuthors.close();
+		getAlbumThumbnailsAndCreators.close();
+		deleteEmptyAlbums.close();
+		addPriorityStatement.close();
+		deleteOrderStatement.close();
 	}
 	
 	public void addImage(int albumId, int imageId) throws SQLException {
