@@ -26,7 +26,6 @@ public class AlbumDAO implements DAO<Album, Integer> {
 	private PreparedStatement getStatement;
 	private PreparedStatement getAllStatement;
 	private PreparedStatement addImageStatement;
-	private PreparedStatement getFromCreatorAndName;
 	private PreparedStatement getAlbumAuthors;
 	private PreparedStatement getAlbumThumbnailsAndCreators;
 	private PreparedStatement deleteEmptyAlbums;
@@ -68,19 +67,6 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		ResultSet result = getAllStatement.executeQuery();
 		
 		return albumsFromResult(result);
-	}
-	
-	public Optional<Album> getFromCreatorAndName(Person person, String name) throws SQLException {
-		getFromCreatorAndName.setInt(1, person.getId());
-		getFromCreatorAndName.setString(2, name);
-		
-		ResultSet result = getFromCreatorAndName.executeQuery();
-		
-		List<Album> albums = albumsFromResult(result);
-		
-		return albums.isEmpty()
-				? Optional.empty()
-				: Optional.of(albums.get(0));
 	}
 
 	@Override
@@ -135,7 +121,6 @@ public class AlbumDAO implements DAO<Album, Integer> {
 		deleteStatement.close();
 		getAllStatement.close();
 		addImageStatement.close();
-		getFromCreatorAndName.close();
 		getAlbumAuthors.close();
 		getAlbumThumbnailsAndCreators.close();
 		deleteEmptyAlbums.close();
