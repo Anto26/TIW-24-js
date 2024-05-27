@@ -1,0 +1,21 @@
+sequenceDiagram
+    participant DeleteImageServlet
+    participant AlbumDAO
+    participant ImageDAO
+    participant JsonUtility
+
+
+    DeleteImageServlet ->>+ ImageDAO: new ImageDAO()
+    DeleteImageServlet ->> ImageDAO: get(imgId)
+    alt image exists
+        ImageDAO ->> DeleteImageServlet: Optional<Image> img
+        DeleteImageServlet ->> ImageDAO: delete(imgId)
+        DeleteImageServlet ->> AlbumDAO: deleteEmptyAlbums()
+        DeleteImageServlet ->> JsonUtility: mapTojson(img.get())
+        JsonUtility ->> DeleteImageServlet: JsonObject result 
+        DeleteImageServlet ->> DeleteImageServlet: goodRequestResponse(response, result) 
+    else image does not exist
+        ImageDAO ->>- DeleteImageServlet: Optional.empty()
+        DeleteImageServlet ->> DeleteImageServlet: badRequestResponse("image does not exist")
+    end
+ 

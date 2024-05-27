@@ -1,0 +1,12 @@
+
+sequenceDiagram
+    participant GetAlbumsServlet
+    participant AlbumDAO
+    participant JsonUtility
+
+    GetAlbumsServlet ->>+ AlbumDAO: new AlbumDAO(); 
+    GetAlbumsServlet ->> AlbumDAO: getAlbumThumbnailAndPersonMap()
+    AlbumDAO -->>- GetAlbumsServlet: LinkedHashMap<Album, Pair<Perosn, Image>> albums
+    GetAlbumsServlet ->> JsonUtility: getAlbumsJsonObject(albums)
+    JsonUtility -->> GetAlbumsServlet: JsonArray result
+    GetAlbumsServlet ->> GetAlbumsServlet: goodRequestResponse(response, result) 

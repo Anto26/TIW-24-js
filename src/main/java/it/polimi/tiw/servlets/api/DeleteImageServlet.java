@@ -58,7 +58,6 @@ public class DeleteImageServlet extends ApiServlet {
 			return;
 		}
 		Integer imgId = Integer.parseInt(imgParameter);
-		Optional<Comment> c;
 		Optional<Image> img;
 		try {
 			imageDAO = new ImageDAO(this.dbConnection);

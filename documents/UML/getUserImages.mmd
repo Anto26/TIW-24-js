@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant GetUserImages
+    participant ImageDAO
+    participant JsonUtility
+
+    GetUserImages ->>+  ImageDAO: new ImageDAO()
+    GetUserImages ->> ImageDAO: getPersonImages(user)
+    ImageDAO ->>- GetUserImages: List<Image> imgs
+    GetUserImages ->> JsonUtility: maptTojson(imgs)
+    JsonUtility -->> GetUserImages: List<Image> result
+    GetUserImages ->> GetUserImages: goodRequestResponse(response, result)  
+
+        
+
+

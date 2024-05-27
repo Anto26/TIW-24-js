@@ -1,0 +1,19 @@
+
+
+sequenceDiagram
+    participant CreateAlbumServlet
+    participant ImageDAO
+    participant AlbumDAO
+
+    CreateAlbumServlet ->>+ ImageDAO: new ImageDAO()
+    Note left of CreateAlbumServlet: For each image id given
+    CreateAlbumServlet ->>+ ImageDAO: image.get(id)
+    alt image does not exist or uploader is not the user
+    CreateAlbumServlet ->> CreateAlbumServlet: badRequestResponse(response, "Wrong image selected")
+    else
+    CreateAlbumServlet ->> AlbumDAO: save(title, user.getId())
+    AlbumDAO -->> CreateAlbumServlet: Album album
+    Note left of CreateAlbumServlet: For each image id given
+    CreateAlbumServlet ->> AlbumDAO: addImage(album, id)
+    CreateAlbumServlet ->> CreateAlbumServlet: goodRequestResponse()...
+    end

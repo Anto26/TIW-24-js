@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant AddOrderServlet
+    participant AlbumDAO
+    participant ImageDAO
+
+    AddOrderServlet ->>+ AlbumDAO: new AlbumDAO()
+    AddOrderServlet ->> AlbumDAO: get(albumId)
+    AlbumDAO -->> AddOrderServlet: Album album
+    Note left of AddOrderServlet: for each valid id and priority given
+    AddOrderServlet ->> AlbumDAO: addPriority(album, user, id, priority)
+    Note left of AddOrderServlet: Show ordered images
+    AddOrderServlet ->>+ ImageDAO: new ImageDAO()
+    ImageDAO -->> AddOrderServlet: LinkedHashMap<Image, Pair<Person, List<Pair<Person, Comment>>>> images
+    AddOrderServlet ->> JsonUtility: mapToAlbumPage(album.get(), creator, images)  
+    JsonUtility -->> AddOrderServlet: JsonObject result
+    AddOrderServlet ->> AddOrderServlet: goodRequestResponse(result)

@@ -1,0 +1,21 @@
+
+sequenceDiagram
+    participant AddCommentServlet
+    participant ImageDAO
+    participant CommentDao
+    participant JsonUtility
+
+    AddCommentServlet ->> ImageDAO: get(imageId)
+    alt image does not exist
+        AddCommentServlet ->> AddCommentServlet: badRequestResponse(response, "Image does not exist", 404)
+    end
+    alt comment is too long
+        AddCommentServlet ->> ImageServlet: badRequestResponse(response, "Comment too long", 400)
+    else
+        AddCommentServlet ->> CommentDao: save()
+        CommentDao -> AddCommentServlet: Optional<Comment> c
+        AddCommentServlet ->> JsonUtility: mapToJson(c)
+        JsonUtility -->> AddCommentServlet: JsonObject result
+        AddCommentServlet ->> AddCommentServlet: goodRequestResponse(response, result)
+
+    end

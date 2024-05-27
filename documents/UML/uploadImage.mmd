@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant UploadImageServlet
+    participant ImageDAO
+    participant CreateAlbumUtility
+    participant Jsonutility
+
+    alt error in parameters:
+        UploadImageServlet ->> UploadImageServlet: badRequestResponse(response, "...")
+    else
+    UploadImageServlet ->> CreateAlbumUtility: createRandomFilePath(context.getInitParameter(uploadDir), extension)
+    UploadImageServlet ->> ImageDAO: save(image_path, title, description, user.getId())
+    ImageDAO -->> UploadImageServlet: Image img
+    UploadImageServlet ->> Jsonutility: mapToJson(img)
+    Jsonutility -->> UploadImageServlet: JsonObject result
+    UploadImageServlet ->> UploadImageServlet: goodRequestResponse(response, result)
+    end         

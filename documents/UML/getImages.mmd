@@ -1,0 +1,26 @@
+sequenceDiagram
+    participant GetImagesServlet
+    participant AlbumDAO
+    participant PersonDAO
+    participant ImageDAO
+    participant JsonUtility
+
+    GetImagesServlet ->>+ AlbumDAO: new AlbumDAO(); 
+    GetImagesServlet ->> AlbumDAO: get(albumId)
+    alt Album doesn't exist
+        AlbumDAO -->> GetImagesServlet: Optional.empty()
+        GetImagesServlet ->> GetImagesServlet: badRequestResponse(...)
+    else Album exists:
+        AlbumDAO-->> GetImagesServlet: Optional<Album> album
+        GetImagesServlet ->> PersonDAO: get(album.get().getCreatorId())
+        PersonDAO -->> GetImagesServlet: Person creator
+        GetImagesServlet ->> ImageDAO: getAlbumImagesWithCommentsOrdered(album.get(), user)
+        ImageDAO -->> GetImagesServlet: LinkedHashMap<Image, Pair<Person, List<Pair<Person, Comment>>>> images
+        GetImagesServlet ->> JsonUtility: mapToAlbumPage(album.get(), creator, images)  
+        JsonUtility -->> GetImagesServlet: JsonObject result
+        GetImagesServlet ->> GetImagesServlet: goodRequestResponse(result) 
+    end
+
+        
+
+
