@@ -28,7 +28,6 @@ public class ImageDAO implements DAO<Image, Integer> {
 	private PreparedStatement getAlbumThumbnailStatement;
 	private PreparedStatement getPersonImagesStatement;
 	private PreparedStatement getImageFromPathStatement;
-	private PreparedStatement getAlbumImagesStatement;
 	private PreparedStatement getAlbumImagesWithCommentsOrderedStatement;
 	
 	public ImageDAO(Connection dbConnection) throws SQLException {
@@ -41,7 +40,6 @@ public class ImageDAO implements DAO<Image, Integer> {
 		getImageFromPathStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE path = ?");
 		getPersonImagesStatement = dbConnection.prepareStatement("SELECT * FROM image WHERE uploader_id = ?");
 		getAlbumThumbnailStatement = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id WHERE ia.album_id=? ORDER BY upload_date DESC, id DESC;");
-		getAlbumImagesStatement = dbConnection.prepareStatement("SELECT i.* FROM image i JOIN image_album ia ON i.id=ia.image_id WHERE ia.album_id = ? ORDER BY i.upload_date DESC, i.id DESC");
 		getAlbumImagesWithCommentsOrderedStatement = dbConnection.prepareStatement("SELECT * \n"
 				+ "FROM image i \n"
 				+ "	JOIN image_album ia on i.id=ia.image_id\n "
@@ -129,19 +127,12 @@ public class ImageDAO implements DAO<Image, Integer> {
 		getAlbumThumbnailStatement.close();
 		getPersonImagesStatement.close();
 		getImageFromPathStatement.close();
-		getAlbumImagesStatement.close();
 		getAlbumImagesWithCommentsOrderedStatement.close();
 	}
 	
 	public List<Image> getPersonImages(Person person) throws SQLException {
 		getPersonImagesStatement.setInt(1, person.getId());
 		ResultSet result = getPersonImagesStatement.executeQuery();
-		return this.imagesFromResult(result);
-	}
-	
-	public List<Image> getAlbumImages(Album album) throws SQLException {
-		getAlbumImagesStatement.setInt(1, album.getId());
-		ResultSet result = getAlbumImagesStatement.executeQuery();
 		return this.imagesFromResult(result);
 	}
 	

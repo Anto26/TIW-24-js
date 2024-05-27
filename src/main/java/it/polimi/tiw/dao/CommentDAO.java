@@ -6,13 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
 import it.polimi.tiw.beans.Comment;
 import it.polimi.tiw.beans.Image;
-import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.utils.DAOUtility;
 
 public class CommentDAO implements DAO<Comment, Integer> {

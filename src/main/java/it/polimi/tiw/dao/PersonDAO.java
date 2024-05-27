@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
 
-import it.polimi.tiw.beans.Album;
 import it.polimi.tiw.beans.Person;
 import it.polimi.tiw.utils.DAOUtility;
 import it.polimi.tiw.utils.SignUtility;
@@ -22,7 +21,6 @@ public class PersonDAO implements DAO<Person, Integer> {
 	private PreparedStatement getFromUsernameStatement;
 	private PreparedStatement getFromEmailStatement;
 	private PreparedStatement getFromEmailOrUsernameStatement;
-	private PreparedStatement getAlbumAuthorStatement;
 	
 	public PersonDAO(Connection dbConnection) throws SQLException {
 		this.dbConnection = dbConnection;
@@ -34,7 +32,6 @@ public class PersonDAO implements DAO<Person, Integer> {
 		getFromUsernameStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE username=?;");
 		getFromEmailStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE email=?;");
 		getFromEmailOrUsernameStatement = dbConnection.prepareStatement("SELECT * FROM person WHERE username = ? or email = ?");
-		getAlbumAuthorStatement = dbConnection.prepareStatement("SELECT p.* FROM album a JOIN person p ON a.creator_id=p.id WHERE a.id=?;");
 	}
 	
 	@Override
@@ -42,14 +39,6 @@ public class PersonDAO implements DAO<Person, Integer> {
 		getFromIdStatement.setInt(1, id);
 		
 		ResultSet result = getFromIdStatement.executeQuery();
-		
-		return personFromResult(result);
-	}
-	
-	public Optional<Person> getAlbumAuthor(Album album) throws SQLException {
-		getAlbumAuthorStatement.setInt(1, album.getId());
-		
-		ResultSet result = getAlbumAuthorStatement.executeQuery();
 		
 		return personFromResult(result);
 	}
@@ -121,7 +110,6 @@ public class PersonDAO implements DAO<Person, Integer> {
 		updateStatement.close();
 		deleteStatement.close();
 		getFromEmailOrUsernameStatement.close();
-		getAlbumAuthorStatement.close();
 	}
 
 	private Optional<Person> personFromResult (ResultSet result) throws SQLException {
