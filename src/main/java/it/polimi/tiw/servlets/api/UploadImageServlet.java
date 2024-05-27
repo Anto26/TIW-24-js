@@ -107,7 +107,7 @@ public class UploadImageServlet extends ApiServlet {
 		this.doGet(request, response);
 	}
 	
-	public void destory() {
+	public void destroy() {
 		super.destroy();
 		try {
 			if (this.imageDAO != null) {

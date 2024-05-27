@@ -94,7 +94,7 @@ public class CreateAlbumServlet extends ApiServlet {
 		this.doGet(request, response);
 	}
 	
-	public void destory() {
+	public void destroy() {
 		super.destroy();
 		try {
 			if (this.albumDAO != null) {
