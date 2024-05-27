@@ -1,4 +1,4 @@
-const baseUrl = window.location.origin + '/TIW-24-jss';
+const baseUrl = window.location.origin + '/TIW-24-js';
 const checkAvailabilityUrl = baseUrl + '/checkAvailability';
 const getAlbumsUrl = baseUrl + '/getAlbums';
 const getMeUrl = baseUrl + '/getMe';

@@ -83,17 +83,13 @@
 				id="image-title" type="text" class="input" name="title" /> <br />
 			<!-- Image description -->
 			<label class="input-label">Image description</label> <br />
-			<textarea id="image-description" class="input" name="description">  </textarea>
+			<textarea id="image-description" class="input" name="description"></textarea>
 			<!-- Image upload -->
 			<div style="display: flex; justify-content: center;">
-				<input type="file" id="image-upload" name="image" accept="image/*"
-					hidden required /> <label for="image-upload"
-					class="icon-button button"> <img src="icons/upload.svg"
-					title="Upload image" alt="Upload" />
+				<input type="file" id="image-upload" name="image" accept="image/*" hidden required /> 
+				<label for="image-upload" class="icon-button button"> <img src="icons/upload.svg" title="Upload image" alt="Upload" />
 				</label>
-				<button type="button" style="margin-left: 5px"
-					class="button accent-button" onclick="submitImage();">
-					Upload</button>
+				<button type="button" style="margin-left: 5px" class="button accent-button" onclick="submitImage();">Upload</button>
 			</div>
 		</form>
 		<!-- Create album form -->

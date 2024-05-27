@@ -32,8 +32,7 @@ var currentAlbum;
 var dragged;
 
 // Make initial request to get information for home page
-asyncXHR(getMeUrl,
-	(url) => { },
+asyncXHR(getMeUrl, () => {},
 	(response) => {
 		if (response.ok) {
 			username = response.result.username;
@@ -51,6 +50,15 @@ asyncXHR(getMeUrl,
 		}
 	}
 );
+
+function escape(str) {
+    return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+}
 
 function showCreateAlbumPage() {
 	homePage.setAttribute("style", "display:none;");
@@ -87,8 +95,7 @@ function showAlbumPage(id) {
 function refreshAlbums() {
 	userAlbumsDiv.innerHTML = "";
 	othersAlbumsDiv.innerHTML = "";
-	asyncXHR(getAlbumsUrl,
-		(url) => { },
+	asyncXHR(getAlbumsUrl, () => {},
 		(response) => {
 			if (response.ok) {
 				albums = response.result;
@@ -109,12 +116,12 @@ function populateAlbums(albums) {
 		// TODO add onclick to button
 		card.innerHTML = `
           <div class="thumbnail-container">
-            <img class="album-thumbnail" src="images/${album.thumbnail.file_path}" />
+            <img class="album-thumbnail" src="images/${escape(album.thumbnail.file_path)}" />
           </div>
           <div class="card-information">
-            <p class="card-title">${album.title}</p>
-            <p class="card-author">by: ${album.creator.username}</p>
-            <p class="card-date">${album.creation_date}</p>
+            <p class="card-title">${escape(album.title)}</p>
+            <p class="card-author">by: ${escape(album.creator.username)}</p>
+            <p class="card-date">${escape(album.creation_date)}</p>
             <button class="button accent-button">Go to album</button>
           </div>
         `;
@@ -125,11 +132,10 @@ function populateAlbums(albums) {
 		});
 		// Add the card to the right container
 		// Choose where to put the album
-		if (album.creator.username == username) {
+		if (album.creator.username == username)
 			container = userAlbumsDiv;
-		} else {
+		else
 			container = othersAlbumsDiv;
-		}
 		container.appendChild(card);
 	});
 }
@@ -139,13 +145,15 @@ function populateAlbums(albums) {
 
 function refreshImages() {
 	photoList.innerHTML = '';
-	asyncXHR(getUserImagesUrl, (url) => { return url; }, (response) => {
-		if (response.ok) {
-			// Populate images
-			images = response.result;
-			populateImages(images);
+	asyncXHR(getUserImagesUrl, () => {}, 
+		(response) => {
+			if (response.ok) {
+				// Populate images
+				images = response.result;
+				populateImages(images);
+			}
 		}
-	});
+	);
 }
 
 function populateImages(images) {
@@ -157,8 +165,8 @@ function populateImages(images) {
 		// TODO add onclick to button
 		photo.innerHTML = `
         <div class="photo-check">
-            <input id="${image.id}" name="${image.id}" type="checkbox" name="checkbox" class="checkbox">
-            <img src="images/${image.file_path}" class="checkbox-image" />
+            <input id="${escape(image.id)}" name="${escape(image.id)}" type="checkbox" name="checkbox" class="checkbox">
+            <img src="images/${escape(image.file_path)}" class="checkbox-image" />
         </div>
         `;
 		photoList.appendChild(photo);
@@ -181,11 +189,10 @@ function submitImage() {
 	},
 		sendForm,
 		(response) => {
-			if (response.ok) {
+			if (response.ok)
 				refreshImages();
-			} else {
+			else
 				displayError(response.result);
-			}
 		});
 }
 
@@ -200,11 +207,10 @@ function submitAlbum() {
 			url.searchParams.append("title", document.querySelector("#album-title").value);
 		},
 		(response) => {
-			if (response.ok) {
+			if (response.ok)
 				showHomePage();
-			} else {
+			else
 				displayError(response.result);
-			}
 		});
 }
 
@@ -229,8 +235,8 @@ function refreshAlbumPage(id) {
 }
 
 function populateAlbumInfo(album) {
-	document.getElementById("album-page-title").innerHTML = album.title;
-	document.getElementById("album-page-author").innerHTML = album.creator.username + " - " + album.creation_date;
+	document.getElementById("album-page-title").innerText = album.title;
+	document.getElementById("album-page-author").innerText = album.creator.username + " - " + album.creation_date;
 }
 
 function populateAlbumImages(albumImages) {
@@ -266,10 +272,10 @@ function populateAlbumImages(albumImages) {
 		// Add inner HTML
 		if (image != null) {
 			photo.innerHTML = `
-								<p class="image-title">${image.title}</p>
-								<div>
-									<img src="images/${image.file_path}" class="image-thumbnail"/>
-								</div>
+				<p class="image-title">${escape(image.title)}</p>
+				<div>
+					<img src="images/${escape(image.file_path)}" class="image-thumbnail"/>
+				</div>
 	        `;
 			thumbnail = photo.querySelector(".image-thumbnail");
 			thumbnail.addEventListener("mouseover", () => { showImgModal(image); });
@@ -316,12 +322,12 @@ function showImgModal(img) {
             	<span class="close">&times;</span>
 
 				<div class="image-page">
-					<h1 style="margin-bottom: 0px">${img.title}</h1>
-					<p>${img.description}</p>
-					<p style="margin-top: 2px;">Created by ${img.uploader.username} on ${img.date}</p>
+					<h1 style="margin-bottom: 0px">${escape(img.title)}</h1>
+					<p>${escape(img.description)}</p>
+					<p style="margin-top: 2px;">Created by ${escape(img.uploader.username)} on ${escape(img.date)}</p>
 					<button class="button destructive-button delete-button" style="display:none;"> Delete</button>
 					<div style="overflow-x: scroll; overflow-y: scroll">
-						<img src="images/${img.file_path}">
+						<img src="images/${escape(img.file_path)}">
 					</div>
 					<div class="centerdiv">
 						<div class="comments">
@@ -341,7 +347,7 @@ function showImgModal(img) {
             </div>
         </div>`;
 	if (img.uploader.username == username) {
-		var button = modal.querySelector('.delete-button');
+		const button = modal.querySelector('.delete-button');
 		button.addEventListener("click", () => {deleteImage(img.id); modal.remove();});
 		button.setAttribute("style", "");
 	}
@@ -354,8 +360,8 @@ function showImgModal(img) {
 		const commentObj = document.createElement('div');
 		commentObj.classList = 'comment'
 		commentObj.innerHTML = `
-			<p class="comment-author">${comment.author.username}</p>
-			<p class="comment-text">${comment.content}</p>`;
+			<p class="comment-author">${escape(comment.author.username)}</p>
+			<p class="comment-text">${escape(comment.content)}</p>`;
 
 		commentContainer.appendChild(commentObj);
 	});
@@ -380,8 +386,8 @@ function showImgModal(img) {
 						const commentObj = document.createElement('div');
 						commentObj.classList = 'comment'
 						commentObj.innerHTML = `
-							<p class="comment-author">${username}</p>
-							<p class="comment-text">${textComment.value}</p>`;
+							<p class="comment-author">${escape(username)}</p>
+							<p class="comment-text">${escape(textComment.value)}</p>`;
 						commentContainer.appendChild(commentObj);
 						// Add comment to local image object
 						img.comments.push({
@@ -404,11 +410,10 @@ function showImgModal(img) {
 
 	// Close modal when it is clicked out of the modal
 	document.querySelector("#img-modal").addEventListener("click", (e) => {
-		if (e.target == document.querySelector("#img-modal")) {
+		if (e.target == document.querySelector("#img-modal"))
 			modal.remove();
-		} else {
+		else
 			e.stopPropagation();
-		}
 	});
 
 	// Close modal when span with 'X' icon clicked
@@ -420,7 +425,9 @@ function showImgModal(img) {
 
 function deleteImage(imgId) {
 	asyncXHR(deleteImageUrl,
-		(url) => {url.searchParams.append("imgId", imgId);},
+		(url) => {
+			url.searchParams.append("imgId", imgId);
+		},
 		(response) => {
 			if (response.ok) {
 				refreshAlbumPage(currentAlbum.id);
@@ -516,9 +523,9 @@ function showReorderModal() {
 
 		const imgObj = document.createElement('td');
 		imgObj.innerHTML = `
-			<div class="image-cell dropzone droptarget draggable" draggable="true" id="${img.id}">
-				<p class="image-title">${img.title}</p>
-				<img src="images/${img.file_path}" class="image-thumbnail" />
+			<div class="image-cell dropzone droptarget draggable" draggable="true" id="${escape(img.id)}">
+				<p class="image-title">${escape(img.title)}</p>
+				<img src="images/${escape(img.file_path)}" class="image-thumbnail" />
 			</div>`;
 
 		document.querySelector('#image-container-' + rowCount).appendChild(imgObj);
@@ -557,11 +564,10 @@ function showReorderModal() {
 
 	// Close modal when it is clicked out of the modal
 	document.querySelector("#reorder-modal").addEventListener("click", (e) => {
-		if (e.target == document.querySelector("#reorder-modal")) {
+		if (e.target == document.querySelector("#reorder-modal"))
 			modal.remove();
-		} else {
+		else
 			e.stopPropagation();
-		}
 	});
 
 	// Close modal when span with 'X' icon clicked
