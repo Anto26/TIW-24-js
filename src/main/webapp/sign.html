@@ -1,0 +1,64 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title>TIW - Sign in</title>
+
+	<!-- Set a viewport to make the design responsive -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="css/sign.css">
+</head>
+<body>
+	<div class="popup error-container" id="error-popup">
+	    <p id="error-message"></p>
+	</div>
+	<div class="popup fine-container" id="fine-popup">
+	    <p id="fine-message"></p>
+	</div>
+	<div class="outer-form">
+		<div>
+			<div class="error-container" th:if="${error}">
+				<p th:text="${errorMessage}">Wrong username/email or password</p>
+			</div>
+			<div class="sign-forms-container">
+				<div class="sign-form">
+				    <h1>Sign in</h1>
+				    <form method="post" action="signin">
+				        <label class="sign-label">E-mail / Username</label>
+				        <br />
+				        <input class="sign-input" type="text" name="signin-email-username">
+				        <br />
+				        <label class="sign-label">Password</label>
+				        <br />
+				        <input class="sign-input" type="password" name="signin-password">
+				        <br />
+				        <input type="submit" class="button accent-button" value="Sign In">
+				    </form>
+				</div>
+                <div style="width: 30px;"></div>
+                <div class="sign-form">
+                    <h1>Sign up</h1>
+                    <form method="post" action="signup">
+                        <label class="sign-label">Username</label>
+                        <br />
+                        <input class="sign-input" type="text" name="signup-username" />
+                        <br />
+                        <label class="sign-label">E-mail</label>
+                        <br />
+                        <input class="sign-input" type="email" name="signup-email" />
+                        <br />
+                        <label class="sign-label">Password</label>
+                        <br />
+                        <input class="sign-input" type="password" name="signup-password" />
+                        <br />
+                        <label class="sign-label">Repeat password</label>
+                        <br />
+                        <input class="sign-input" type="password" name="signup-repeat-password">
+                        <br />
+                        <input type="submit" class="button accent-button" value="Sign Up" />
+                    </form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

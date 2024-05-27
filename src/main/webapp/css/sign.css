@@ -10,7 +10,13 @@
     justify-content: center;
     margin: auto;
 }
-
+.sign-forms-container {
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+}
 .sign-form {
     /* colors and style */
     background-color: var(--primary-container);
@@ -49,12 +55,4 @@
 
 .extra-text {
     text-align: center;
-}
-
-.error-popup-show-sign {
-    margin-top: 20px !important;
-}
-
-.fine-popup-show-sign {
-    margin-top: 20px !important;
 }

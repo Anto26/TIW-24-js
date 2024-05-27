@@ -35,20 +35,20 @@ public class SignupServlet extends ThymeleafServlet {
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
 		ctx.setVariable("error", false);
 
-		templateEngine.process("signup", ctx, response.getWriter());
+		templateEngine.process("sign", ctx, response.getWriter());
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String username = request.getParameter("username");
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
-		String repeatedPassword = request.getParameter("repeat-password");
+		String username = request.getParameter("signup-username");
+		String email = request.getParameter("signup-email");
+		String password = request.getParameter("signup-password");
+		String repeatedPassword = request.getParameter("signup-repeat-password");
 
 		// Create a new session
 		HttpSession session = request.getSession(true);
 
 		WebContext ctx = new WebContext(request, response, getServletContext(), response.getLocale());
-		SignUtility util = new SignUtility(response, templateEngine, ctx, "signup");
+		SignUtility util = new SignUtility(response, templateEngine, ctx, "sign");
 
 		// If some fields haven't been filled
 		if (email.length() > 255 || SignUtility.isNullOrBlank(username) || SignUtility.isNullOrBlank(email)
