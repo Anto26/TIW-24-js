@@ -431,9 +431,15 @@ function deleteImage(imgId) {
 		},
 		(response) => {
 			if (response.ok) {
-				refreshAlbumPage(currentAlbum.id);
+				if (albumImages.length == 1) {
+					showHomePage();
+				} else {
+					refreshAlbumPage(currentAlbum.id);
+				}
 				displayFine("Image deleted");
 				modal.remove();
+				
+				
 			} else {
 				dipslayError(response.result);
 			}
