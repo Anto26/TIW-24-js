@@ -70,6 +70,7 @@ function showCreateAlbumPage() {
 }
 
 function showHomePage() {
+	page=0;
 	homePage.setAttribute("style", "");
 	createAlbumPage.setAttribute("style", "display:none;");
 	albumPage.setAttribute("style", "display:none;");
@@ -244,7 +245,7 @@ function populateAlbumImages(albumImages) {
 	maxPage = 0;
 	if (albumImages.length > 5) {
 		maxPage = Math.floor(albumImages.length / 5) - 1;
-		if (albumImages % 5 != 0) {
+		if (albumImages.length % 5 != 0) {
 			maxPage++;
 		}
 	}
