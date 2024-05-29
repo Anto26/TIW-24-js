@@ -39,14 +39,16 @@ asyncXHR(getMeUrl, () => {},
 
 			usernameHeader.textContent = username;
 			// Populate albums
-			asyncXHR(getAlbumsUrl, (url) => { return url; }, (response) => {
-				if (response.ok) {
-					albums = response.result;
-					populateAlbums(albums);
-				} else {
-					displayError(response.result);
+			asyncXHR(getAlbumsUrl, (url) => {}, 
+				(response) => {
+					if (response.ok) {
+						albums = response.result;
+						populateAlbums(albums);
+					} else {
+						displayError(response.result);
+					}
 				}
-			})
+			)
 		}
 	}
 );
@@ -114,7 +116,6 @@ function populateAlbums(albums) {
 		const card = document.createElement("div");
 		card.classList.add("album-card");
 		// Add inner HTML
-		// TODO add onclick to button
 		card.innerHTML = `
           <div class="thumbnail-container">
             <img class="album-thumbnail" src="images/${escape(album.thumbnail.file_path)}" />

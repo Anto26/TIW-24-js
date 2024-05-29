@@ -45,28 +45,18 @@ function sessionExpired() {
 	setTimeout(() => {window.location.replace(baseUrl + "/signin");}, 5000);
 }
 
-function displayError(error, type="") {
+function displayError(error) {
     errorMessage.innerHTML = error;
 
-    if(type === 'sign') {
-    	errorPopup.classList.add("error-popup-show-sign");
-    	setTimeout(() => {errorPopup.classList.remove("error-popup-show-sign")}, 4000);
-    } else {
-    	errorPopup.classList.add("popup-show")
-    	setTimeout(() => {errorPopup.classList.remove("popup-show")}, 4000);
-    }
+	errorPopup.classList.add("popup-show")
+	setTimeout(() => {errorPopup.classList.remove("popup-show")}, 4000);
 }
 
-function displayFine(fine, type="") {
+function displayFine(fine) {
     fineMessage.innerHTML = fine;
 
-    if(type === 'sign') {
-    	finePopup.classList.add("fine-popup-show-sign");
-    	setTimeout(() => {finePopup.classList.remove("fine-popup-show-sign")}, 4000);
-    } else {
-    	finePopup.classList.add("popup-show")
-    	setTimeout(() => {finePopup.classList.remove("popup-show")}, 4000);
-    }
+	finePopup.classList.add("popup-show")
+	setTimeout(() => {finePopup.classList.remove("popup-show")}, 4000);
 }
 
 function sendFormData(urlString, paramsInitCallback, form, onResponseCallback) {
@@ -74,6 +64,7 @@ function sendFormData(urlString, paramsInitCallback, form, onResponseCallback) {
 	paramsInitCallback(url);
 	const xmlHttpRequest = new XMLHttpRequest();
 	var formData = form;
+	
 	xmlHttpRequest.withCredentials = true;	
 	xmlHttpRequest.onreadystatechange = () => {
 		if (xmlHttpRequest.readyState === 4) {
@@ -84,6 +75,5 @@ function sendFormData(urlString, paramsInitCallback, form, onResponseCallback) {
 	};
 	
 	xmlHttpRequest.open("POST", url, true);
-	//xmlHttpRequest.setRequestHeader("Content-Type", "multipart/form-data");
 	xmlHttpRequest.send(formData);
 }

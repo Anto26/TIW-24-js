@@ -1,7 +1,7 @@
-const username = document.querySelector('#username');
-const email = document.querySelector('#email');
-const password = document.querySelector('#password');
-const repeatPassword = document.querySelector('#repeat-password');
+const username = document.querySelector('#signup-username');
+const email = document.querySelector('#signup-email');
+const password = document.querySelector('#signup-password');
+const repeatPassword = document.querySelector('#signup-repeat-password');
 const form = document.querySelector('.inner-form');
 const errorPopup = document.querySelector('#error-popup');
 const errorMessage = document.querySelector('#error-message');
@@ -18,9 +18,9 @@ username.addEventListener("focusout", () => {
 			},
 			(response) => {
 				if(!response.ok && username.value !== '')
-					displayError(response.result, 'sign');
+					displayError(response.result);
 				else if(response.result.taken)
-					displayError('The username is already taken', 'sign');
+					displayError('The username is already taken');
 			}
 		);
 	}
@@ -30,7 +30,7 @@ email.addEventListener("focusout", () => {
 	const validEmailPattern = new RegExp("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$");
 	
 	if(!validEmailPattern.test(email.value) && email.value !== '') {
-		displayError('The email address is not valid', 'sign');
+		displayError('The email address is not valid');
 	} else {
 		asyncXHR(checkAvailabilityUrl, 
 			(url) => {
@@ -38,9 +38,9 @@ email.addEventListener("focusout", () => {
 			},
 			(response) => {
 				if(!response.ok && email.value !== '')
-					displayError(response.result, 'sign');
+					displayError(response.result);
 				else if(response.result.taken)
-					displayError('The email address is already taken', 'sign');
+					displayError('The email address is already taken');
 			}
 		);
 	}
@@ -48,14 +48,14 @@ email.addEventListener("focusout", () => {
 
 password.addEventListener("input", () => {
 	if (password.value.length < 8 || password.value.length > 40)
-		displayError('The password has to be at least 8 characters and must not exceed 40 characters', 'sign');
+		displayError('The password has to be at least 8 characters and must not exceed 40 characters');
 	else
-		displayFine('The password meets the criteria', 'sign')
+		displayFine('The password meets the criteria');
 });
 
 repeatPassword.addEventListener("input", () => {
 	if(repeatPassword.value !== password.value)
-		displayError('The passwords ARE NOT equal', 'sign');
+		displayError('The passwords ARE NOT equal');
 	else
-		displayFine('The passwords are equal', 'sign')
+		displayFine('The passwords are equal');
 });

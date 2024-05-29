@@ -74,20 +74,22 @@
 	<div id="create-album-page" class="create-album-form"
 		style="display: none;">
 		<h1>Upload a new image</h1>
+		
 		<!-- Upload form-->
-		<p>Choose the image, the title and the description and then click
-			upload</p>
+		<p>Choose the image, the title and the description and then click upload</p>
 		<form id="image-form" enctype="multipart/form-data">
-			<!-- Image title-->
-			<label class="input-label">Image title</label> <br /> <input
-				id="image-title" type="text" class="input" name="title" /> <br />
+			<label class="input-label">Image title</label>
+			<br /> 
+			<input id="image-title" type="text" class="input" name="title" />
+			<br />
 			<!-- Image description -->
 			<label class="input-label">Image description</label> <br />
 			<textarea id="image-description" class="input" name="description"></textarea>
 			<!-- Image upload -->
 			<div style="display: flex; justify-content: center;">
 				<input type="file" id="image-upload" name="image" accept="image/*" hidden required /> 
-				<label for="image-upload" class="icon-button button"> <img src="icons/upload.svg" title="Upload image" alt="Upload" />
+				<label for="image-upload" class="icon-button button">
+					<img src="icons/upload.svg" title="Upload image" alt="Upload" />
 				</label>
 				<button type="button" style="margin-left: 5px" class="button accent-button" onclick="submitImage();">Upload</button>
 			</div>
@@ -96,18 +98,16 @@
 		<h1>Create a new album</h1>
 		<div>
 			<!-- Album title input -->
-			<label class="input-label">Album title</label> <br /> <input
-				class="input" id="album-title" type="text" name="album-title"
-				required /> <br />
+			<label class="input-label">Album title</label> 
+			<br /> 
+			<input class="input" id="album-title" type="text" name="album-title" required /> <br />
 
-			<h2>Album photos</h2>
+			<h2>Album images</h2>
 			<div class="photos-list" id="photos-list">
 				<!-- Photo list -->
-
 			</div>
 			<br />
-			<button class="button accent-button" onClick="submitAlbum();">
-				Create album</button>
+			<button class="button accent-button" onClick="submitAlbum();">Create album</button>
 		</div>
 	</div>
 	
@@ -145,8 +145,7 @@
 				</tr>
 			</table>
 			<!-- Next button -->
-			<div id="next-button" style="display:none;"
-				class="navigation-button" onClick="albumPageNext()"> 
+			<div id="next-button" style="display:none;"class="navigation-button" onClick="albumPageNext()"> 
 				<img src="icons/next.svg" />
 			</div>
 		</div>

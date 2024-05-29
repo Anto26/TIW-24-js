@@ -6,6 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<link rel="stylesheet" href="css/sign.css">
+	<script src="scripts/utility.js" type="text/javascript" defer></script>
+	<script src="scripts/sign.js" type="text/javascript" defer></script>
 </head>
 <body>
 	<div class="popup error-container" id="error-popup">
@@ -40,19 +42,19 @@
                     <form method="post" action="signup">
                         <label class="sign-label">Username</label>
                         <br />
-                        <input class="sign-input" type="text" name="signup-username" />
+                        <input class="sign-input" type="text" name="signup-username" id="signup-username" />
                         <br />
                         <label class="sign-label">E-mail</label>
                         <br />
-                        <input class="sign-input" type="email" name="signup-email" />
+                        <input class="sign-input" type="email" name="signup-email" id="signup-email" />
                         <br />
                         <label class="sign-label">Password</label>
                         <br />
-                        <input class="sign-input" type="password" name="signup-password" />
+                        <input class="sign-input" type="password" name="signup-password" id="signup-password" />
                         <br />
                         <label class="sign-label">Repeat password</label>
                         <br />
-                        <input class="sign-input" type="password" name="signup-repeat-password">
+                        <input class="sign-input" type="password" name="signup-repeat-password" id="signup-repeat-password">
                         <br />
                         <input type="submit" class="button accent-button" value="Sign Up" />
                     </form>
